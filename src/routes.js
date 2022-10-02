@@ -1,7 +1,6 @@
 import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
-import LogoOnlyLayout from './layouts/LogoOnlyLayout';
 //
 import Blog from './pages/Blog';
 import User from './pages/User';
@@ -10,6 +9,11 @@ import NotFound from './pages/Page404';
 import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
+import HomeLayout from './sos/layouts';
+import CartLayout from './sos/layouts/CartLayout';
+import ProductCollectionLayout from './sos/layouts/ProductCollectionLayout';
+import ProductDetailLayout from './sos/layouts/ProductDetailLayout';
+import PurchaseLayout from './sos/layouts/PurchaseLayout';
 
 // ----------------------------------------------------------------------
 
@@ -35,10 +39,18 @@ export default function Router() {
     },
     {
       path: '/',
-      element: <LogoOnlyLayout />,
+      element: <HomeLayout />,
       children: [
-        { path: '/', element: <Navigate to="/dashboard/app" /> },
-        { path: '404', element: <NotFound /> },
+        { path: '/', element: <Navigate to="/products" /> },
+        {
+          path: '/products', element: <ProductCollectionLayout />,
+          children: [
+            { path: ':id', element: <ProductDetailLayout /> },
+          ]
+        },
+        { path: '/cart', element: <CartLayout /> },
+        { path: '/purchase', element: <PurchaseLayout /> },
+        { path: '/404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],
     },
