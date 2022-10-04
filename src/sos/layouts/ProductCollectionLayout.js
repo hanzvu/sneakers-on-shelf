@@ -1,16 +1,29 @@
-import { useState } from 'react';
-// material
+import { useEffect, useState } from 'react';
 import { Container, Stack } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import { ProductSort, ProductCartWidget, ProductFilterSidebar } from '../../sections/@dashboard/products';
 import ProductCollection from '../components/product/ProductCollection';
+import { findProducts } from '../services/ProductService';
 // mock
 
 
 // ----------------------------------------------------------------------
 
 export default function ProductCollectionLayout() {
+
+    const [data, setData] = useState({
+        content: []
+    });
+
+    useEffect(() => {
+        findProducts({
+            page: 1
+        }).then(response => {
+            setData(response.data)
+        })
+    }, [])
+
     const [openFilter, setOpenFilter] = useState(false);
 
     const handleOpenFilter = () => {
@@ -35,7 +48,7 @@ export default function ProductCollectionLayout() {
                     </Stack>
                 </Stack>
 
-                <ProductCollection />
+                {data.content.length > 0 && <ProductCollection products={data.content} />}
 
                 <ProductCartWidget />
             </Container>
