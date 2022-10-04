@@ -38,7 +38,7 @@ export default function Order() {
                         <div className="d-flex justify-content-between">
                             <div className="d-flex align-items-center">
                                 <a className="float-start">
-                                    <button className="btn btn-danger">Hủy Đơn</button>
+                                    <button type="button" className="btn btn-danger">Hủy Đơn</button>
                                 </a>
                             </div>
                             <div className="py-3 px-5 text-end">

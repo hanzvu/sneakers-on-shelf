@@ -27,11 +27,11 @@ ShopProduct.propTypes = {
 };
 
 export default function ShopProduct({ product }) {
-    const { id, name, image, originalPrice, sellPrice } = product;
+
+    const { id, name, image, sellPrice, originalPrice } = product;
 
     return (
         <>
-
             <Card>
                 <Box sx={{ pt: '100%', position: 'relative' }}>
                     {originalPrice < sellPrice && (

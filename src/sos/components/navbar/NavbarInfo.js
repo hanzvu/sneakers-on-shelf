@@ -1,6 +1,10 @@
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 export default function NavbarInfo() {
+
+    const cart = useSelector(state => state.cart.cart)
+
     return (<>
         <div className="col-4 d-none d-md-block">
             <div className="h-100 row d-flex justify-content-center m-0">
@@ -10,7 +14,9 @@ export default function NavbarInfo() {
                 <div className="px-3 col-3 d-flex flex-column justify-content-center align-items-center">
                     <div className="position-relative">
                         <Link className="text-dark h2 bi bi-cart3" to={'/cart'} />
-                        <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">99</span>
+                        {cart.items && cart.items.length > 0 &&
+                            < span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{cart.items.length}</span>
+                        }
                     </div>
                 </div>
             </div>

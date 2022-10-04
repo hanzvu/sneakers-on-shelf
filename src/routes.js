@@ -38,13 +38,14 @@ export default function Router() {
       element: <Register />,
     },
     {
-      path: '/',
+      path: '',
       element: <HomeLayout />,
       children: [
-        { path: '/', element: <Navigate to="/products" /> },
+        { path: '', element: <Navigate to="/products" /> },
         {
-          path: '/products', element: <ProductCollectionLayout />,
+          path: 'products',
           children: [
+            { path: '', element: <ProductCollectionLayout /> },
             { path: ':id', element: <ProductDetailLayout /> },
           ]
         },
