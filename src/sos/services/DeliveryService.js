@@ -43,6 +43,10 @@ const fetchWardToStore = districtId => {
     })
 }
 
+const clearWardFromStore = () => {
+    store.dispatch(setWards([]))
+}
+
 const getDeliveryInfo = async (orderId, districtId, wardCode) => {
     const response = await axios.get(`${BASE_API}/content/v1/delivery/${orderId}/calculate`, {
         params: {
@@ -53,4 +57,4 @@ const getDeliveryInfo = async (orderId, districtId, wardCode) => {
     return response.data;
 }
 
-export { fetchProvincesToStore, fetchDistrictToStore, fetchWardToStore, getDeliveryInfo }
+export { fetchProvincesToStore, fetchDistrictToStore, fetchWardToStore, getDeliveryInfo, clearWardFromStore }

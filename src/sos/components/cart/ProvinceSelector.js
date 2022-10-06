@@ -1,7 +1,7 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchDistrictToStore } from "../../services/DeliveryService";
+import { clearWardFromStore, fetchDistrictToStore } from "../../services/DeliveryService";
 
 
 export default function ProvinceSelector({ setProvince }) {
@@ -10,8 +10,9 @@ export default function ProvinceSelector({ setProvince }) {
     const provinces = useSelector(state => state.ghnProvince.provinces);
 
     const handleChange = (event) => {
-        setProvince(provinces[event.target.value]);
+        clearWardFromStore();
         fetchDistrictToStore(event.target.value);
+        setProvince(provinces[event.target.value]);
         setSelectedProvince(event.target.value);
     };
 
