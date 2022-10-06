@@ -2,7 +2,7 @@ export default function ProductDetailSidebar() {
     return (<>
         <div className="col py-3">
             <ul className="list-group">
-                <li className="list-group-item"><div className="row g-0">
+                <li className="list-group-item py-3"><div className="row g-0">
                     <div className="col-3 d-flex justify-content-center">
                         <img src="//bizweb.dktcdn.net/thumb/icon/100/413/756/themes/837736/assets/privacy_1_image.png?1639392852659" className="img-fluid rounded-start" alt="..." />
                     </div>
@@ -13,7 +13,7 @@ export default function ProductDetailSidebar() {
                         </div>
                     </div>
                 </div></li>
-                <li className="list-group-item"><div className="row g-0">
+                <li className="list-group-item py-3"><div className="row g-0">
                     <div className="col-3 d-flex justify-content-center">
                         <img src="//bizweb.dktcdn.net/thumb/icon/100/413/756/themes/837736/assets/privacy_2_image.png?1639392852659" className="img-fluid rounded-start" alt="..." />
                     </div>
@@ -24,7 +24,7 @@ export default function ProductDetailSidebar() {
                         </div>
                     </div>
                 </div></li>
-                <li className="list-group-item"><div className="row g-0">
+                <li className="list-group-item py-3"><div className="row g-0">
                     <div className="col-3 d-flex justify-content-center">
                         <img src="//bizweb.dktcdn.net/thumb/icon/100/413/756/themes/837736/assets/privacy_3_image.png?1639392852659" className="img-fluid rounded-start" alt="..." />
                     </div>
@@ -35,7 +35,7 @@ export default function ProductDetailSidebar() {
                         </div>
                     </div>
                 </div></li>
-                <li className="list-group-item"><div className="row g-0">
+                <li className="list-group-item py-3"><div className="row g-0">
                     <div className="col-3 d-flex justify-content-center">
                         <img src="//bizweb.dktcdn.net/thumb/icon/100/413/756/themes/837736/assets/privacy_4_image.png?1639392852659" className="img-fluid rounded-start" alt="..." />
                     </div>

@@ -14,6 +14,7 @@ import CartLayout from './sos/layouts/CartLayout';
 import ProductCollectionLayout from './sos/layouts/ProductCollectionLayout';
 import ProductDetailLayout from './sos/layouts/ProductDetailLayout';
 import PurchaseLayout from './sos/layouts/PurchaseLayout';
+import PurchaseDetailLayout from './sos/layouts/PurchaseDetailLayout';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +51,13 @@ export default function Router() {
           ]
         },
         { path: '/cart', element: <CartLayout /> },
-        { path: '/purchase', element: <PurchaseLayout /> },
+        {
+          path: '/purchase',
+          children: [
+            { path: '', element: <PurchaseLayout /> },
+            { path: ':id', element: <PurchaseDetailLayout /> }
+          ],
+        },
         { path: '/404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },
       ],

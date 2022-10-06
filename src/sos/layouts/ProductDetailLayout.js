@@ -11,6 +11,7 @@ import { findProduct } from '../services/ProductService';
 
 
 export default function ProductDetailLayout() {
+
     const params = useParams();
     const [product, setProduct] = useState()
 
@@ -21,18 +22,18 @@ export default function ProductDetailLayout() {
     }, [params.id])
 
     return (<>
-        <Page title="Giày">
+        <Page title={product ? product.name : null}>
             <Container>
                 <div className="container-fluid row m-0 p-0 justify-content-center">
-                    <div className="row col-12 m-0 p-0">
-                        {product &&
-                            <>
+                    {product &&
+                        <>
+                            <div className="row col-12 m-0 p-0">
                                 <ProductDetail product={product} />
                                 <ProductDetailSidebar />
-                            </>
-                        }
-                    </div>
-                    <ProductDetailDescription />
+                            </div>
+                            <ProductDetailDescription />
+                        </>
+                    }
                 </div>
             </Container>
         </Page>

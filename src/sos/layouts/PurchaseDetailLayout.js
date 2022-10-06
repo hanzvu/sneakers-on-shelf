@@ -1,13 +1,13 @@
 import { Container } from "@mui/material";
 import Page from "../../components/Page";
-import Order from "../components/purchase/Order";
+import PurchaseDetail from "../components/purchase/PurchaseDetail";
 
-export default function PurchaseLayout() {
+export default function PurchaseDetailLayout() {
 
     return (<>
         <Page title="Đơn Hàng">
             <Container>
-                <Order />
+                <PurchaseDetail />
             </Container>
         </Page>
     </>)
