@@ -145,7 +145,7 @@ export default function CartOrderForm({ id, total }) {
                                     <Typography
                                         component="span"
                                         variant="h6" textAlign={"end"}>
-                                        Thời gian nhận hàng dự kiến : {formatDate(new Date(1665100799 * 1000))}
+                                        Thời gian nhận hàng dự kiến : {formatDate(new Date(delivery.leadtime * 1000))}
                                     </Typography>
                                 </Box>
                             }
