@@ -6,6 +6,7 @@ export default function Footer() {
     return (
         <div className='mt-5'>
             <footer className="footer">
+                <hr/>
                 <div className="container">
                 <div className="row">
                         <div className="col-md-6 col-lg-5 col-sm-6 mb-5 mb-lg-0 text-sm-left mr-auto">
@@ -64,7 +65,7 @@ export default function Footer() {
                             </div>
                         </div>
             
-                        <div className="col-md-6 col-lg-3 col-sm-6 text-sm-left">
+                        <div className="col-md-6 col-lg-3 col-sm-6 text-sm-left mb-3">
                             <div className="footer-widget">
                             <h4 className="mb-4">Opening Hours</h4>
                             <ul className="pl-0 list-unstyled mb-3">
@@ -81,11 +82,11 @@ export default function Footer() {
             </footer>
             
             
-            <div className="footer-btm py-4">
+            <div className="footer-btm py-4 bg-white">
                 <div className="container">
                 <div className="row ">
-                        <div className="col-lg-6">
-                            <p className="copyright mb-0 ">@ Copyright Reserved to SOS &amp; made by <a className="text-decoration-none text-dark" href="#">Sneaker On Shelf</a></p>
+                        <div className="col-lg-12">
+                            <p className="copyright mb-0 ">@ Copyright Reserved to SOS &amp; made by <a className="text-decoration-none text-dark" href="#">members of Sneaker On Shelf company</a></p>
                         </div>
                         {/* <div className="col-lg-6 d-lg-flex justify-content-between">
                             <ul className="list-inline mb-0 footer-btm-links text-lg-right mt-2 mt-lg-0">
