@@ -6,7 +6,6 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import Button from '@mui/material/Button';
 import { Grid, Rating, TextField, Typography } from '@mui/material';
-import user from '../assets/img/user.png';
 
 export default function ProductDetailDescription() {
     const [value, setValue] = React.useState('1');
