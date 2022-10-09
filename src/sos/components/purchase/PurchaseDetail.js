@@ -32,17 +32,17 @@ export default function PurchaseDetail() {
             <Paper elevation={3} square>
                 {
                     data.delivery &&
-                    <Box p={3}>
+                    <Box p={{ xs: 1, md: 3 }}>
                         <Box borderBottom={1} borderColor={"grey.500"}>
                             <Typography variant="h5" gutterBottom>
-                                TRẠNG THÁI GIAO HÀNG
+                                GIAO HÀNG
                             </Typography>
                         </Box>
-                        <Box pt={3} px={3}>
+                        <Box pt={3}>
                             <div className="col-sm-10">
                                 <div className="row m-0 py-2">
                                     <div className="col-4">Trạng Thái</div>
-                                    <div className="col-8">{data.delivery.deliveryStatus}</div>
+                                    <div className="col-8">{data.delivery.deliveryStatus.description}</div>
                                 </div>
                                 <div className="row m-0 py-2">
                                     <div className="col-4">Cập Nhật Lúc</div>
@@ -58,17 +58,49 @@ export default function PurchaseDetail() {
                 }
 
             </Paper>
+
             <Paper elevation={3} square>
-                <Box p={3}>
+                <Box p={{ xs: 1, md: 3 }}>
+                    <Box borderBottom={1} borderColor={"grey.500"}>
+                        <Typography variant="h5" gutterBottom>
+                            THANH TOÁN
+                        </Typography>
+                    </Box>
+                    <Box pt={3}>
+                        <div className="col-sm-10">
+                            <div className="row m-0 py-2">
+                                <div className="col-4">Trạng thái thanh toán</div>
+                                <div className="col-8">{data.paymentStatus.description}</div>
+                            </div>
+                            <div className="row m-0 py-2">
+                                <div className="col-4">Phương thức thanh toán</div>
+                                <div className="col-8">{data.paymentMethod.description}</div>
+                            </div>
+                            {
+                                data.paymentQRCode &&
+                                <div className="row m-0 py-2">
+                                    <div className="col-4">Mã QR thanh toán</div>
+                                    <div className="col-8"><img alt="qr" src={data.paymentQRCode} /></div>
+                                </div>
+                            }
+                        </div>
+                    </Box>
+                </Box>
+            </Paper>
+
+            <Paper elevation={3} square>
+                <Box p={{ xs: 1, md: 3 }}>
                     <Box borderBottom={1} borderColor={"grey.500"}>
                         <Typography variant="h5" gutterBottom>
                             ĐỊA CHỈ NHẬN HÀNG
                         </Typography>
                     </Box>
-                    <Box pt={3} px={3}>
+                    <Box pt={3}>
                         <div className="col-sm-10">
                             <div className="row m-0 py-2">
-                                <div className="col-4">Họ Và Tên</div>
+                                <div className="col-4">
+                                    Họ và tên
+                                </div>
                                 <div className="col-8">{data.customerInfo.fullname}</div>
                             </div>
                             <div className="row m-0 py-2">
@@ -85,7 +117,7 @@ export default function PurchaseDetail() {
             </Paper>
 
             <Paper elevation={3} square>
-                <Box p={3}>
+                <Box p={{ xs: 1, md: 3 }}>
                     <Box>
                         {data.items.map(item => (<OrderItem key={item.id} orderItem={item} />))}
                     </Box>
