@@ -24,7 +24,6 @@ export default function ProductCollectionLayout() {
                             isOpenFilter={openFilter}
                             onOpenFilter={() => setOpenFilter(true)}
                             onCloseFilter={() => setOpenFilter(false)} />
-                        <ProductSort />
                     </Stack>
                 </Stack>
                 <ProductCollection />

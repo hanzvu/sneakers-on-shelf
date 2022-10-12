@@ -7,6 +7,8 @@ import Iconify from "../../../components/Iconify";
 import ProductCollectionGenderFilter from "./ProductCollectionGenderFilter";
 import ProductCollectionBrandFilter from "./ProductCollectionBrandFilter";
 import ProductCollectionCategoryFilter from "./ProductCollectionCategoryFilter";
+import { ProductSort } from "../../../sections/@dashboard/products";
+import ProductCollectionSorter from "./ProductCollectionSorter";
 
 export default function ProductCollectionFilterSidebar({ isOpenFilter, onOpenFilter, onCloseFilter }) {
 
@@ -48,6 +50,13 @@ export default function ProductCollectionFilterSidebar({ isOpenFilter, onOpenFil
         })
     }
 
+    const handleChangeSorter = sort => {
+        setSearchParams({
+            ...Object.fromEntries(searchParams.entries()),
+            sort
+        })
+    }
+
     const clearFilterHandler = () => {
         setSearchParams({})
     }
@@ -85,6 +94,8 @@ export default function ProductCollectionFilterSidebar({ isOpenFilter, onOpenFil
                     </Stack>
                 </Scrollbar>
             </Drawer>
+
+            <ProductCollectionSorter value={searchParams.get('sort')} handleChangeSorter={handleChangeSorter} />
         </>
     );
 }
