@@ -1,8 +1,8 @@
 import axios from "axios";
 import { removeCart, setCart } from "../redux/cartSlice";
-import { openModal } from "../redux/modalSlice";
 import store from '../redux/store';
 import { BASE_API } from "./ApplicationConstant";
+import { showSnackbar } from "./NotificationService";
 
 
 const fetchCart = async () => {
@@ -31,35 +31,60 @@ const submitCart = async (customerInfo, paymentMethod) => {
     return response.data;
 }
 
-const addToCart = async (productId) => {
+const addToCart = async (productId, quantity = 1) => {
     const cart = await getOrCreateCart();
-    axios.post(`${BASE_API}/content/v1/cart/${cart.id}/items/${productId}`, null, {
+    try {
+        await axios.post(`${BASE_API}/content/v1/cart/${cart.id}/items`, null, {
+            params: {
+                product_id: productId,
+                quantity
+            },
+            headers: {
+                user_token_query: cart.userTokenQuery
+            }
+        });
+        await fetchCart();
+        showSnackbar("Đã thêm sản phẩm vào giỏ hàng.");
+    } catch (error) {
+        if (error.response != null && error.response.status === 400) {
+            showSnackbar(error.response.data, "error");
+        } else {
+            clearCart()
+        }
+        throw new Error("Sản phẩm tạm hết hàng.");
+    }
+}
+
+const setCartItemQuantity = async (cartItemId, quantity = 1) => {
+    const cart = await getOrCreateCart();
+    await axios.put(`${BASE_API}/content/v1/cart/items/${cartItemId}`, null, {
+        params: {
+            quantity
+        },
         headers: {
             user_token_query: cart.userTokenQuery
         }
-    }).then(response => {
-        fetchCart()
-        store.dispatch(openModal({
-            title: null,
-            text: 'Đã thêm sản phẩm vào giỏ hàng'
-        }))
     }).catch(error => {
-        console.log(error);
-        clearCart();
+        if (error.response != null && error.response.status === 400) {
+            showSnackbar(error.response.data, "error");
+        } else {
+            clearCart()
+        }
+    }).finally(() => {
+        fetchCart();
     })
 }
 
 const removeFromCart = async (productId) => {
     const cart = await getOrCreateCart();
 
-    axios.delete(`${BASE_API}/content/v1/cart/${cart.id}/items/${productId}`, {
+    axios.delete(`${BASE_API}/content/v1/cart/items/${productId}`, {
         headers: {
             user_token_query: cart.userTokenQuery
         }
     }).then(response => {
         fetchCart()
     }).catch(error => {
-        console.log(error);
         clearCart();
     })
 }
@@ -121,4 +146,4 @@ const removeCartFromLocalStorage = () => {
     window.localStorage.removeItem('cart');
 }
 
-export { submitCart, addToCart, removeFromCart, deleteCart, fetchCart }
+export { submitCart, addToCart, setCartItemQuantity, removeFromCart, deleteCart, fetchCart }

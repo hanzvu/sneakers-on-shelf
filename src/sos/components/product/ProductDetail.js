@@ -1,3 +1,4 @@
+import { Grid, Typography } from '@mui/material';
 import { fCurrency } from '../../../utils/formatNumber';
 
 import ProductDetailSizeList from "./ProductDetailSizeList";
@@ -5,24 +6,49 @@ import ProductImageContainer from "./ProductImageContainer";
 
 export default function ProductDetail({ product }) {
 
-    const { name, productImage, productImages, category, sellPrice, productDetails, description } = product;
+    const { name, productImage, productImages, brand, category, productGender, sellPrice, productDetails, description } = product;
 
     return (<>
-        <div className="row col-12 col-lg-8 m-0 p-0">
-            <div className="col-md-6">
+        <Grid container item spacing={5} pt={3}>
+            <Grid container item md={6}>
                 <ProductImageContainer name={name} productImage={productImage} productImages={productImages} />
-            </div>
-            <div className="col-md-6">
-                <h4>{name}</h4>
-                <p className="m-0">
-                    Danh mục : {category}
-                </p>
+            </Grid>
+            <Grid item md={6}>
+                <Typography variant='h4'>
+                    {name}
+                </Typography>
+                <Grid container spacing={1}>
+                    <Grid item container spacing={2}>
+                        <Grid item xs={5}>
+                            Thương hiệu :
+                        </Grid>
+                        <Grid item xs={7}>
+                            {brand}
+                        </Grid>
+                    </Grid>
+                    <Grid item container spacing={2}>
+                        <Grid item xs={5}>
+                            Danh mục :
+                        </Grid>
+                        <Grid item xs={7}>
+                            {category}
+                        </Grid>
+                    </Grid>
+                    <Grid item container spacing={2}>
+                        <Grid item xs={5}>
+                            Dành cho :
+                        </Grid>
+                        <Grid item xs={7}>
+                            {productGender}
+                        </Grid>
+                    </Grid>
+                </Grid>
+
                 <div className="py-3">
-                    <h5 className="text-danger m-0">{fCurrency(sellPrice)}</h5>
+                    <h5 className="h4 text-danger m-0 fw-bold">{fCurrency(sellPrice)}</h5>
                 </div>
-                <p>{description}</p>
                 <ProductDetailSizeList productDetails={productDetails} />
-            </div>
-        </div>
+            </Grid>
+        </Grid>
     </>)
 }
