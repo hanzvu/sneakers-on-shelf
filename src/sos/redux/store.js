@@ -5,10 +5,12 @@ import snackbarReducer from './snackbarSlice'
 import ghnProvinceReducer from './ghnProvinceSlice'
 import ghnDistrictReducer from './ghnDistrictSlice'
 import ghnWardReducer from './ghnWardSlice'
+import userReducer from './userSlice'
 
 export default configureStore({
     reducer: {
         cart: cartReducer,
+        user: userReducer,
         modal: modalReducer,
         snackbar: snackbarReducer,
         ghnProvince: ghnProvinceReducer,

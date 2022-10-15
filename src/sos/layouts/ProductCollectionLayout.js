@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Container, Stack } from '@mui/material';
 // components
 import Page from '../../components/Page';
-import { ProductSort } from '../../sections/@dashboard/products';
 import ProductCollection from '../components/collection/ProductCollection';
-import { findProducts } from '../services/ProductService';
 import ProductCollectionFilterSidebar from '../components/collection/ProductCollectionFilterSidebar';
 // mock
 
