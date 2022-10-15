@@ -1,11 +1,9 @@
 import { Box, FormControl, FormControlLabel, Grid, ListItemIcon, Radio, RadioGroup, Stack, styled, Typography } from "@mui/material";
 import { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { fCurrency } from "../../../utils/formatNumber";
 import Iconify from "../../../components/Iconify";
-import { openModal } from "../../redux/modalSlice";
 import CartOrderInput from "./CartOrderInput";
 import DistrictSelector from "./DistrictSelector";
 import ProvinceSelector from "./ProvinceSelector";
@@ -13,6 +11,7 @@ import WardSelector from "./WardSelector";
 import { getDeliveryInfo } from "../../services/DeliveryService";
 import { deleteCart, submitCart } from "../../services/CartService";
 import { formatDate } from "../../utils/DateUtil";
+import { showSnackbar } from "../../services/NotificationService";
 
 const ListItemIconStyle = styled(ListItemIcon)({
     width: 22,
@@ -24,8 +23,6 @@ const ListItemIconStyle = styled(ListItemIcon)({
 });
 
 export default function CartOrderForm({ id, total }) {
-
-    const dispatch = useDispatch();
 
     const [delivery, setDelivery] = useState({ fee: 0, leadtime: null })
 
@@ -75,18 +72,12 @@ export default function CartOrderForm({ id, total }) {
     const handleSubmit = event => {
         event.preventDefault();
         if (ghnAddress.current.province == null || ghnAddress.current.district == null || ghnAddress.current.ward == null) {
-            dispatch(openModal({
-                title: "Thông Báo",
-                text: "Bạn chưa chọn xong địa chỉ."
-            }))
+            showSnackbar("Bạn chưa chọn xong địa chỉ.", "warning")
             return;
         }
 
         if (total === 0) {
-            dispatch(openModal({
-                title: "Thông Báo",
-                text: "Chưa có mặt hàng nào trong giỏ."
-            }))
+            showSnackbar("Chưa có mặt hàng nào trong giỏ.", "warning")
             return;
         }
 
@@ -108,13 +99,11 @@ export default function CartOrderForm({ id, total }) {
                 pathname: `/purchase/${id}`,
                 search: `?token=${res}`
             })
+            showSnackbar("Đặt hàng thành công.")
             deleteCart()
         }).catch(error => {
             console.log(error);
-            dispatch(openModal({
-                title: "Thông Báo",
-                text: "Có lỗi xảy ra, hãy thử lại sau."
-            }))
+            showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
         })
     }
 

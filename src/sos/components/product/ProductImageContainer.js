@@ -20,10 +20,12 @@ export default function ProductImageContainer({ name, productImage, productImage
     };
 
     return (<>
-        <Box sx={{ pt: '100%', position: 'relative' }}>
-            <ProductImgStyle alt={name} src={image} />
-        </Box>
-        <Grid container spacing={0} >
+        <Grid item xs={12}>
+            <Box sx={{ pt: '100%', position: 'relative' }}>
+                <ProductImgStyle alt={name} src={image} />
+            </Box>
+        </Grid>
+        <Grid container item spacing={0} xs={12}>
             {productImages.map((img, index) => (
                 <Grid key={index} item xs={3} sm={6} md={3}>
                     <Box sx={{ pt: '100%', position: 'relative' }} borderColor={'grey.500'}>

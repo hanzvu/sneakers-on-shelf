@@ -34,7 +34,7 @@ export default function ShopProduct({ product }) {
         <>
             <Card>
                 <Box sx={{ pt: '100%', position: 'relative' }}>
-                    {originalPrice < sellPrice && (
+                    {/* {originalPrice > sellPrice && (
                         <Label
                             variant="filled"
                             color={'error'}
@@ -45,24 +45,24 @@ export default function ShopProduct({ product }) {
                                 position: 'absolute',
                                 textTransform: 'uppercase',
                             }}>
-                            'Sale'
+                            Sale - {parseInt((100 * sellPrice) / originalPrice, 10)} %
                         </Label>
-                    )}
+                    )} */}
                     <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
                         <ProductImgStyle alt={name} src={image} />
                     </Link>
                 </Box>
 
-                <Stack spacing={2} sx={{ p: 3 }}>
+                <Stack spacing={2} sx={{ p:2 }}>
                     <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
-                        <Typography variant="subtitle2" noWrap>
+                        <Typography variant="subtitle1">
                             {name}
                         </Typography>
                     </Link>
 
-                    <Stack direction="row" alignItems="center" justifyContent="space-between">
-                        <Typography variant="subtitle1">
-                            <Typography
+                    <Stack direction="row" alignItems="center" justifyContent="flex-end">
+                        <Typography variant="subtitle1" className='text-danger'>
+                            {/* <Typography
                                 component="span"
                                 variant="body1"
                                 sx={{
@@ -71,8 +71,7 @@ export default function ShopProduct({ product }) {
                                 }}
                             >
                                 {originalPrice && fCurrency(originalPrice)}
-                            </Typography>
-                            &nbsp;
+                            </Typography> */}
                             {fCurrency(sellPrice)}
                         </Typography>
                     </Stack>
