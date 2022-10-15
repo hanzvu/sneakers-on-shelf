@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Stack, Typography } from "@mui/material";
+import { Box, Grid, Link, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { formatDatetime } from "../../utils/DateUtil";
@@ -50,7 +50,7 @@ export default function PurchaseDetail() {
                                 </div>
                                 <div className="row m-0 py-2">
                                     <div className="col-4">Chi tiết</div>
-                                    <div className="col-8"><a className="link-info" href={`https://donhang.ghn.vn/?order_code=${data.delivery.parcelTrackingId}`}>Kiểm tra</a></div>
+                                    <div className="col-8"><Link className="link-info" underline="none" href={`https://donhang.ghn.vn/?order_code=${data.delivery.parcelTrackingId}`}>Kiểm tra</Link></div>
                                 </div>
                             </div>
                         </Box>
@@ -119,7 +119,7 @@ export default function PurchaseDetail() {
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box>
-                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} />))}
+                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname} idPurchase={data.id} userTokenQuery={data.userTokenQuery}/>))}
                     </Box>
                     <Grid container spacing={1} pt={3} justifyContent={"flex-end"}>
                         <Grid item md={4} xs={12}>
