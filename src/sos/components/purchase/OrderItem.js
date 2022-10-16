@@ -23,7 +23,7 @@ const labels = {
 function getLabelText(value) {
     return `${value} Star${value !== 1 ? "s" : ""}, ${labels[value]}`;
 }
-export default function OrderItem({ orderItem, customName, idPurchase, userTokenQuery}) {
+export default function OrderItem({ orderItem, customName }) {
 
     const [value, setValue] = React.useState(5);
 

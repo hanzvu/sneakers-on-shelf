@@ -119,7 +119,7 @@ export default function PurchaseDetail() {
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box>
-                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname} idPurchase={data.id} userTokenQuery={data.userTokenQuery}/>))}
+                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname}/>))}
                     </Box>
                     <Grid container spacing={1} pt={3} justifyContent={"flex-end"}>
                         <Grid item md={4} xs={12}>

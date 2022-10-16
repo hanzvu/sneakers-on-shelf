@@ -13,8 +13,8 @@ const addRate = async (id, score, comment) => {
 }
 
 const findRatesByProductID = async (id) => {
-    const response = await axios.get(`${BASE_API}/content/v1/rate/${id}`)
-    return response;
+    const rates = await axios.get(`${BASE_API}/api/v1/product-details/${id}/rates`)
+    return rates;
 }
 
 export { addRate, findRatesByProductID }

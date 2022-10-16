@@ -8,16 +8,24 @@ import ProductDetail from "../components/product/ProductDetail";
 import ProductDetailDescription from '../components/product/ProductDetailDescription';
 import ProductDetailSidebar from "../components/product/ProductDetailSidebar";
 import { findProduct } from '../services/ProductService';
+import { findRatesByProductID } from '../services/RateService';
+
 
 
 export default function ProductDetailLayout() {
 
     const params = useParams();
-    const [product, setProduct] = useState()
+    const [product, setProduct] = useState();
+    const [rate, setRate] = useState();
 
     useEffect(() => {
         findProduct(params.id).then(response => {
+            console.log(response.data);
             setProduct(response.data)
+        })
+        findRatesByProductID(params.id).then(rates => {
+            setRate(rates.data)
+            console.log(rates.data);
         })
     }, [params.id])
 
@@ -31,7 +39,7 @@ export default function ProductDetailLayout() {
                                 <ProductDetail product={product} />
                                 <ProductDetailSidebar />
                             </div>
-                            <ProductDetailDescription />
+                            <ProductDetailDescription rates={rate}/>
                         </>
                     }
                 </div>
