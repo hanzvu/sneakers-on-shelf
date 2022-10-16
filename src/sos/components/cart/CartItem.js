@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
-import { removeFromCart } from '../../services/CartService';
+import { Grid, Typography } from '@mui/material';
+import { removeFromCart, setCartItemQuantity } from '../../services/CartService';
 import { fCurrency } from '../../../utils/formatNumber';
+import CartIncrementer from './CartIncrementer';
 
 export default function CartItem({ item }) {
 
@@ -10,28 +12,49 @@ export default function CartItem({ item }) {
         removeFromCart(id)
     }
 
+    const handleChangeQuantity = value => {
+        if (value < 1) {
+            return;
+        }
+        setCartItemQuantity(id, value);
+    }
+
     return (<>
-        <div className="row m-0 py-3 border-bottom">
-            <div className="col-lg-8 m-0 p-0 row">
-                <div className="col-4 col-lg-3 p-0">
+        <Grid container spacing={1} py={3} className={"border-bottom"}>
+            <Grid item container lg={7}>
+
+                <Grid item xs={4} lg={3}>
                     <Link to={`/products/${productId}`}><img src={image} className="img-fluid" alt='product' /></Link>
-                </div>
-                <div className="col-8 d-flex flex-column justify-content-around">
-                    <p className="m-0 fw-bold">{name}</p>
-                    <p className="m-0">Size : {size}</p>
-                    <p className="m-0">{fCurrency(price)}</p>
-                    <p className="m-0">x {quantity}</p>
-                </div>
-            </div>
-            <div className="col-lg-4 m-0 py-2 py-lg-0 row justify-content-around">
-                <div className="col-md-6 text-center d-flex align-items-center justify-content-center">
-                    <p className="m-0 text-danger">{fCurrency(quantity * price)}</p>
-                </div>
-                <div className="col-md-6 d-flex justify-content-center align-items-center">
+                </Grid>
+                <Grid item container xs={8} justifyContent={"space-around"} direction={"column"}>
+                    <Typography variant="h5" gutterBottom>
+                        {name}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        Size : {size}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                        {fCurrency(price)}
+                    </Typography>
+                </Grid>
+            </Grid>
+            <Grid item lg={5} container spacing={2}>
+                <Grid item container md={4} xs={6} justifyContent="center" alignItems="center">
+                    <CartIncrementer
+                        name="quantity"
+                        quantity={quantity}
+                        onBlurHandler={value => handleChangeQuantity(value)}
+                        onIncrementQuantity={() => handleChangeQuantity(quantity + 1)}
+                        onDecrementQuantity={() => handleChangeQuantity(quantity - 1)} />
+                </Grid>
+                <Grid item container md={4} xs={6} justifyContent="center" alignItems="center">
+                    <p className="m-0 text-danger text-center">{fCurrency(quantity * price)}</p>
+                </Grid>
+                <Grid item container md={4} xs={12} justifyContent="center" alignItems="center">
                     <button type="button" className="btn btn-danger shadow-none" onClick={() => handleRemoveCart(id)}>
                         Xóa Khỏi Giỏ</button>
-                </div>
-            </div>
-        </div>
+                </Grid>
+            </Grid>
+        </Grid>
     </>)
 }

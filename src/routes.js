@@ -15,6 +15,7 @@ import ProductCollectionLayout from './sos/layouts/ProductCollectionLayout';
 import ProductDetailLayout from './sos/layouts/ProductDetailLayout';
 import PurchaseLayout from './sos/layouts/PurchaseLayout';
 import PurchaseDetailLayout from './sos/layouts/PurchaseDetailLayout';
+import LoginLayout from './sos/layouts/LoginLayout';
 
 // ----------------------------------------------------------------------
 
@@ -31,10 +32,6 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: <Login />,
-    },
-    {
       path: 'register',
       element: <Register />,
     },
@@ -42,7 +39,13 @@ export default function Router() {
       path: '',
       element: <HomeLayout />,
       children: [
-        { path: '', element: <Navigate to="/products" /> },
+        {
+          path: '',
+          children: [
+            { path: '', element: <Navigate to="/products" /> },
+            { path: 'login', element: <LoginLayout /> },
+          ],
+        },
         {
           path: 'products',
           children: [

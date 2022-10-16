@@ -1,12 +1,9 @@
-import { Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-
 import Page from '../../components/Page';
 import ProductDetail from "../components/product/ProductDetail";
 import ProductDetailDescription from '../components/product/ProductDetailDescription';
-import ProductDetailSidebar from "../components/product/ProductDetailSidebar";
 import { findProduct } from '../services/ProductService';
 import { findRatesByProductID } from '../services/RateService';
 
@@ -32,17 +29,14 @@ export default function ProductDetailLayout() {
     return (<>
         <Page title={product ? product.name : null}>
             <Container>
-                <div className="container-fluid row m-0 p-0 justify-content-center">
+                <Grid container>
                     {product &&
                         <>
-                            <div className="row col-12 m-0 p-0">
-                                <ProductDetail product={product} />
-                                <ProductDetailSidebar />
-                            </div>
+                            <ProductDetail product={product} />
                             <ProductDetailDescription rates={rate}/>
                         </>
                     }
-                </div>
+                </Grid>
             </Container>
         </Page>
     </>)
