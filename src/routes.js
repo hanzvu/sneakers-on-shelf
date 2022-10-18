@@ -16,6 +16,11 @@ import ProductDetailLayout from './sos/layouts/ProductDetailLayout';
 import PurchaseLayout from './sos/layouts/PurchaseLayout';
 import PurchaseDetailLayout from './sos/layouts/PurchaseDetailLayout';
 import LoginLayout from './sos/layouts/LoginLayout';
+import AccountLayout from './sos/layouts/AccountLayout';
+import AccountProfileInfo from './sos/components/account/AccountProfileInfo';
+import AccountAddress from './sos/components/account/AccountAddress';
+import AccountChangePassword from './sos/components/account/AccountChangePassword';
+import AccountPurchase from './sos/components/account/AccountPurchase';
 
 // ----------------------------------------------------------------------
 
@@ -36,7 +41,6 @@ export default function Router() {
       element: <Register />,
     },
     {
-      path: '',
       element: <HomeLayout />,
       children: [
         {
@@ -53,13 +57,23 @@ export default function Router() {
             { path: ':id', element: <ProductDetailLayout /> },
           ]
         },
-        { path: '/cart', element: <CartLayout /> },
+        { path: 'cart', element: <CartLayout /> },
         {
-          path: '/purchase',
+          path: 'purchase',
           children: [
             { path: '', element: <PurchaseLayout /> },
             { path: ':id', element: <PurchaseDetailLayout /> }
           ],
+        },
+        {
+          path: 'account',
+          element: <AccountLayout />,
+          children: [
+            { path: '', element: <AccountProfileInfo /> },
+            { path: 'purchase', element: <AccountPurchase /> },
+            { path: 'address', element: <AccountAddress /> },
+            { path: 'change-password', element: <AccountChangePassword /> },
+          ]
         },
         { path: '/404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" /> },

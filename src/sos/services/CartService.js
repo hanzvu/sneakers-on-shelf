@@ -2,47 +2,37 @@ import axios from "axios";
 import { removeCart, setCart } from "../redux/cartSlice";
 import store from '../redux/store';
 import { BASE_API } from "./ApplicationConstant";
+import { getAuthenticatedUser } from "./AuthenticationService";
 import { showSnackbar } from "./NotificationService";
 
 
 const fetchCart = async () => {
     const cart = await getOrCreateCart();
-    axios.get(`${BASE_API}/content/v1/cart/${cart.id}`, {
-        headers: {
-            user_token_query: cart.userTokenQuery
-        }
-    }).then(response => {
+    axios.get(`${BASE_API}/api/v1/cart/${cart.id}`).then(response => {
         store.dispatch(setCart(response.data))
     })
 }
 
-const submitCart = async (customerInfo, paymentMethod) => {
+const submitCart = async (customerInfo, paymentMethod, email = null) => {
     const cart = await getOrCreateCart();
-    const response = await axios.post(`${BASE_API}/content/v1/cart/${cart.id}/submit`,
-        {
-            customer_info: customerInfo,
-            payment_method: paymentMethod
-        },
-        {
-            headers: {
-                user_token_query: cart.userTokenQuery
-            }
-        });
+    const response = await axios.post(`${BASE_API}/api/v1/cart/${cart.id}/submit`, {
+        customer_info: customerInfo,
+        payment_method: paymentMethod,
+        email
+    });
     return response.data;
 }
 
 const addToCart = async (productId, quantity = 1) => {
     const cart = await getOrCreateCart();
     try {
-        await axios.post(`${BASE_API}/content/v1/cart/${cart.id}/items`, null, {
+        await axios.post(`${BASE_API}/api/v1/cart/${cart.id}/items`, null, {
             params: {
-                product_id: productId,
+                product_detail_id: productId,
                 quantity
-            },
-            headers: {
-                user_token_query: cart.userTokenQuery
             }
         });
+
         await fetchCart();
         showSnackbar("Đã thêm sản phẩm vào giỏ hàng.");
     } catch (error) {
@@ -56,42 +46,42 @@ const addToCart = async (productId, quantity = 1) => {
 }
 
 const setCartItemQuantity = async (cartItemId, quantity = 1) => {
-    const cart = await getOrCreateCart();
-    await axios.put(`${BASE_API}/content/v1/cart/items/${cartItemId}`, null, {
+    axios.put(`${BASE_API}/api/v1/cart/items/${cartItemId}`, null, {
         params: {
             quantity
-        },
-        headers: {
-            user_token_query: cart.userTokenQuery
         }
+    }).then(() => {
+        fetchCart();
     }).catch(error => {
         if (error.response != null && error.response.status === 400) {
             showSnackbar(error.response.data, "error");
         } else {
             clearCart()
         }
-    }).finally(() => {
-        fetchCart();
     })
 }
 
-const removeFromCart = async (productId) => {
+const removeFromCart = async (cartItemId) => {
     const cart = await getOrCreateCart();
 
-    axios.delete(`${BASE_API}/content/v1/cart/items/${productId}`, {
-        headers: {
-            user_token_query: cart.userTokenQuery
-        }
-    }).then(response => {
+    const instance = axios.create({
+        method: 'delete',
+        baseURL: `${BASE_API}/api/v1/cart/items/${cartItemId}`,
+    });
+
+    if (cart.token) {
+        instance.defaults.headers.token = cart.token;
+    }
+
+    axios.delete(`${BASE_API}/api/v1/cart/items/${cartItemId}`).then(() => {
         fetchCart()
     }).catch(error => {
-        clearCart();
+        if (error.response != null && error.response.status === 400) {
+            showSnackbar(error.response.data, "error");
+        } else {
+            clearCart()
+        }
     })
-}
-
-const deleteCart = async () => {
-    store.dispatch(removeCart())
-    removeCartFromLocalStorage()
 }
 
 const getOrCreateCart = async () => {
@@ -99,26 +89,38 @@ const getOrCreateCart = async () => {
     const cart = { ...state.cart.cart };
 
     if (cart.id == null) {
+        const auth = getAuthenticatedUser()
+        if (auth != null) {
+            const cart = await requestCart();
+            return cart;
+        }
+
         const storageCart = getCartFromLocalStorage();
         if (storageCart != null) {
             try {
-                const cart = await requestCart(storageCart.id, storageCart.userTokenQuery);
+                const cart = await requestAnonymousCart(storageCart.id, storageCart.token);
                 return cart;
             } catch (error) {
                 removeCartFromLocalStorage();
             }
         }
-        const response = await axios.get(`${BASE_API}/content/v1/cart`);
+
+        const response = await axios.get(`${BASE_API}/api/v1/cart/anonymous`);
         setCartFromLocalStorage(response.data);
         return response.data;
     }
     return cart;
 }
 
-const requestCart = async (id, token) => {
-    const response = await axios.get(`${BASE_API}/content/v1/cart/${id}`, {
+const requestCart = async () => {
+    const response = await axios.get(`${BASE_API}/api/v1/cart`);
+    return response.data;
+}
+
+const requestAnonymousCart = async (id, token) => {
+    const response = await axios.get(`${BASE_API}/api/v1/cart/${id}`, {
         headers: {
-            user_token_query: token
+            token
         }
     });
     return response.data;
@@ -139,11 +141,10 @@ const getCartFromLocalStorage = () => {
     } catch (error) {
         removeCartFromLocalStorage();
     }
-    return null;
 }
 
 const removeCartFromLocalStorage = () => {
     window.localStorage.removeItem('cart');
 }
 
-export { submitCart, addToCart, setCartItemQuantity, removeFromCart, deleteCart, fetchCart }
+export { submitCart, addToCart, setCartItemQuantity, removeFromCart, fetchCart, clearCart, getCartFromLocalStorage }

@@ -1,13 +1,19 @@
 import axios from "axios";
 import { BASE_API } from "./ApplicationConstant";
 
-const getPurchase = async (id, userTokenQuery) => {
-    const response = await axios.get(`${BASE_API}/content/v1/purchase/${id}`, {
-        headers: {
-            user_token_query: userTokenQuery
-        }
+const getAnonymousPurchase = async (id, token) => {
+    const instance = axios.create({
+        method: 'get',
+        baseURL: `${BASE_API}/api/v1/purchases/${id}`,
     });
+    instance.defaults.headers.token = token;
+    const response = await instance.request();
     return response.data;
 }
 
-export { getPurchase }
+const getPurchase = async (id) => {
+    const response = await axios.get(`${BASE_API}/api/v1/purchases/${id}`);
+    return response.data;
+}
+
+export { getAnonymousPurchase, getPurchase }

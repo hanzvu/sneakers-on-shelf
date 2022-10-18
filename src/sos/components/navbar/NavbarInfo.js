@@ -1,22 +1,42 @@
+import { Link as RouterLink } from 'react-router-dom';
+import { Badge, Link, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 export default function NavbarInfo() {
 
     const cart = useSelector(state => state.cart.cart)
 
+    const account = useSelector(state => state.account.account)
+
     return (<>
         <div className="col-4 d-none d-md-block">
             <div className="h-100 row d-flex justify-content-center m-0">
-                <div className="col-3 px-0 d-flex flex-column justify-content-center align-items-center">
-                    <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/login'} />
+                <div className="col-6 px-0 d-flex justify-content-center align-items-center">
+                    <Stack alignItems={"center"}>
+                        <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/login'} />
+                        {
+                            account.email &&
+                            <Link variant="subtitle2" underline="hover" to={"/account"} color="inherit" component={RouterLink}>{account.email}</Link>
+                        }
+
+                        {
+                            !account.email &&
+                            <div>
+                                <Link variant="subtitle2" underline="hover" to={"/login"} color="inherit" component={RouterLink}>Đăng nhập</Link> / <Link variant="subtitle2" underline="hover" to={"/register"} color="inherit" component={RouterLink}>Đăng ký</Link>
+                            </div>
+                        }
+
+                    </Stack>
+
                 </div>
                 <div className="px-3 col-3 d-flex flex-column justify-content-center align-items-center">
                     <div className="position-relative">
-                        <Link className="text-dark h2 bi bi-cart3" to={'/cart'} />
-                        {cart.items && cart.items.length > 0 &&
-                            < span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{cart.items.length}</span>
-                        }
+                        <Stack alignItems={"center"}>
+                            <Badge badgeContent={cart.items && cart.items.length > 0 ? cart.items.length : ''} invisible={cart.items == null || cart.items.length === 0} color="secondary">
+                                <Link className="text-dark h2 m-0 bi bi-cart3" to={'/cart'} component={RouterLink} />
+                            </Badge>
+                            <Link variant="subtitle2" underline="hover" color="inherit" to={"/cart"} component={RouterLink}>Giỏ hàng</Link>
+                        </Stack>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ import DistrictSelector from "./DistrictSelector";
 import ProvinceSelector from "./ProvinceSelector";
 import WardSelector from "./WardSelector";
 import { getDeliveryInfo } from "../../services/DeliveryService";
-import { deleteCart, submitCart } from "../../services/CartService";
+import { clearCart, submitCart } from "../../services/CartService";
 import { formatDate } from "../../utils/DateUtil";
 import { showSnackbar } from "../../services/NotificationService";
 
@@ -22,7 +22,7 @@ const ListItemIconStyle = styled(ListItemIcon)({
     justifyContent: 'center',
 });
 
-export default function CartOrderForm({ id, total }) {
+export default function CartOrderForm({ id, total, token }) {
 
     const [delivery, setDelivery] = useState({ fee: 0, leadtime: null })
 
@@ -36,7 +36,8 @@ export default function CartOrderForm({ id, total }) {
         ward: null,
         fullname: null,
         phone: null,
-        address: null
+        address: null,
+        email: null
     })
 
     const setProvince = province => {
@@ -63,6 +64,10 @@ export default function CartOrderForm({ id, total }) {
 
     const setGHNPhone = phone => {
         ghnAddress.current.phone = phone;
+    }
+
+    const setGHNEmail = email => {
+        ghnAddress.current.email = email;
     }
 
     const setGHNAddress = address => {
@@ -93,17 +98,21 @@ export default function CartOrderForm({ id, total }) {
             wardName: ghnAddress.current.ward.WardName,
         }
 
-        submitCart(customerInfo, payment).then(res => {
+        submitCart(customerInfo, payment, ghnAddress.current.email).then(res => {
             console.log(res);
-            navigate({
-                pathname: `/purchase/${id}`,
-                search: `?token=${res}`
-            })
+            let navigateModel = { pathname: `/purchase/${res}` }
+            if (token) {
+                navigateModel = { ...navigateModel, search: `?token=${token}` }
+            }
+            navigate(navigateModel)
             showSnackbar("Đặt hàng thành công.")
-            deleteCart()
+            clearCart()
         }).catch(error => {
-            console.log(error);
-            showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
+            if (error.response && error.response.status === 400) {
+                showSnackbar(error.response.data, "error")
+            } else {
+                showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
+            }
         })
     }
 
@@ -113,7 +122,8 @@ export default function CartOrderForm({ id, total }) {
                 <div className="m-0 py-2 border-bottom fw-bold">THÔNG TIN NHẬN HÀNG</div>
                 <Grid container spacing={6} paddingTop={3} alignItems={"start"}>
                     <Grid container item md={8}>
-                        <CartOrderInput setGHNFullname={setGHNFullname} setGHNPhone={setGHNPhone} setGHNAddress={setGHNAddress} />
+
+                        <CartOrderInput setGHNFullname={setGHNFullname} setGHNPhone={setGHNPhone} setGHNAddress={setGHNAddress} setGHNEmail={setGHNEmail} />
 
                         <Grid pt={3} container spacing={1}>
                             <Grid item md={4} xs={12}>
@@ -126,6 +136,8 @@ export default function CartOrderForm({ id, total }) {
                                 <WardSelector setWard={setWard} />
                             </Grid>
                         </Grid>
+
+
                         <Grid item xs={12} pt={3} alignItems={"center"}>
                             {
                                 delivery.leadtime &&

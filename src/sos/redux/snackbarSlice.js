@@ -13,7 +13,7 @@ export const snackbarSlice = createSlice({
         setSnackbar: (state, action) => {
             state.data = action.payload;
         },
-        closeSnackbar: (state, action) => {
+        closeSnackbar: (state) => {
             state.data = {
                 open: false,
                 message: null,

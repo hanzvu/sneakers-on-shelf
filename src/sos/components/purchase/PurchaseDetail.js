@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { formatDatetime } from "../../utils/DateUtil";
 import { fCurrency } from "../../../utils/formatNumber";
-import { getPurchase } from "../../services/PurchaseService";
+import { getAnonymousPurchase, getPurchase } from "../../services/PurchaseService";
 import OrderItem from "./OrderItem";
 
 export default function PurchaseDetail() {
@@ -16,10 +16,15 @@ export default function PurchaseDetail() {
 
 
     useEffect(() => {
-        getPurchase(params.id, searchParams.get("token")).then(data => {
-            console.log(data);
-            setData(data)
-        })
+        if (searchParams.get("token")) {
+            getAnonymousPurchase(params.id, searchParams.get("token")).then(data => {
+                setData(data)
+            })
+        } else {
+            getPurchase().then(data => {
+                setData(data)
+            })
+        }
         searchParams.delete("token")
     }, [params])
 
@@ -119,7 +124,7 @@ export default function PurchaseDetail() {
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box>
-                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname} idPurchase={data.id} userTokenQuery={data.userTokenQuery}/>))}
+                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname} idPurchase={data.id} userTokenQuery={data.userTokenQuery} />))}
                     </Box>
                     <Grid container spacing={1} pt={3} justifyContent={"flex-end"}>
                         <Grid item md={4} xs={12}>
