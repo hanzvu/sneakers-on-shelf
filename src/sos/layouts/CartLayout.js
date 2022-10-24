@@ -64,7 +64,9 @@ export default function CartLayout() {
                     </Paper>
                     <Paper elevation={3} square>
                         <Box p={2}>
-                            <CartOrderForm id={cart.id} total={total(cart.items)} token={cart.token} />
+                            {cart.id &&
+                                <CartOrderForm id={cart.id} total={total(cart.items)} token={cart.token} />
+                            }
                         </Box>
                     </Paper>
                 </Stack>

@@ -5,7 +5,7 @@ import AccountProfile from "../components/account/AccountProfile";
 export default function AccountLayout() {
 
     return (<>
-        <Page title="Đơn Hàng">
+        <Page title="Tài Khoản">
             <Container>
                 <AccountProfile />
             </Container>

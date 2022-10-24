@@ -1,17 +1,16 @@
-import { Box, FormControl, FormControlLabel, Grid, ListItemIcon, Radio, RadioGroup, Stack, styled, Typography } from "@mui/material";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Box, Button, Collapse, Container, FormControl, FormControlLabel, Grid, ListItemIcon, Radio, RadioGroup, Stack, styled, Switch, Typography } from "@mui/material";
+import { getDeliveryInfo } from "../../services/DeliveryService";
 
 import { fCurrency } from "../../../utils/formatNumber";
 import Iconify from "../../../components/Iconify";
-import CartOrderInput from "./CartOrderInput";
-import DistrictSelector from "./DistrictSelector";
-import ProvinceSelector from "./ProvinceSelector";
-import WardSelector from "./WardSelector";
-import { getDeliveryInfo } from "../../services/DeliveryService";
 import { clearCart, submitCart } from "../../services/CartService";
 import { formatDate } from "../../utils/DateUtil";
 import { showSnackbar } from "../../services/NotificationService";
+import AccountAddressForm from "../account/AccountAddressForm";
+import { createAddress, getAddresses } from "../../services/AccountService";
 
 const ListItemIconStyle = styled(ListItemIcon)({
     width: 22,
@@ -24,13 +23,36 @@ const ListItemIconStyle = styled(ListItemIcon)({
 
 export default function CartOrderForm({ id, total, token }) {
 
+    const account = useSelector(state => state.account.account);
+
     const [delivery, setDelivery] = useState({ fee: 0, leadtime: null })
 
     const [payment, setPayment] = useState("COD")
 
+    const [customerInfos, setCustomerInfos] = useState()
+
+    const [checked, setChecked] = useState(account.id == null);
+
+    const [selectedCustomerInfo, setSelectedCustomerInfo] = useState();
+
     const navigate = useNavigate()
 
-    const ghnAddress = useRef({
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await getAddresses(account.id);
+            setCustomerInfos(data);
+            setChecked(false);
+            handleSelectAddress(account.customerInfo)
+        }
+        if (account.id == null) {
+            setChecked(true)
+            return;
+        }
+        fetchData();
+    }, [account])
+
+    const addressFormInput = useRef({
+        id: null,
         province: null,
         district: null,
         ward: null,
@@ -40,80 +62,119 @@ export default function CartOrderForm({ id, total, token }) {
         email: null
     })
 
-    const setProvince = province => {
-        ghnAddress.current.province = province;
-        ghnAddress.current.district = null;
-        ghnAddress.current.ward = null;
-        setDelivery({ fee: 0, leadtime: null })
-    }
-
-    const setDistrict = district => {
-        ghnAddress.current.district = district;
-        ghnAddress.current.ward = null;
-        setDelivery({ fee: 0, leadtime: null })
-    }
-
-    const setWard = ward => {
-        ghnAddress.current.ward = ward;
-        getDeliveryInfo(id, ghnAddress.current.district.DistrictID, ghnAddress.current.ward.WardCode).then(response => setDelivery(response))
-    }
-
-    const setGHNFullname = fullname => {
-        ghnAddress.current.fullname = fullname;
-    }
-
-    const setGHNPhone = phone => {
-        ghnAddress.current.phone = phone;
-    }
-
-    const setGHNEmail = email => {
-        ghnAddress.current.email = email;
-    }
-
-    const setGHNAddress = address => {
-        ghnAddress.current.address = address;
-    }
-
     const handleSubmit = event => {
         event.preventDefault();
-        if (ghnAddress.current.province == null || ghnAddress.current.district == null || ghnAddress.current.ward == null) {
-            showSnackbar("Bạn chưa chọn xong địa chỉ.", "warning")
-            return;
-        }
-
         if (total === 0) {
             showSnackbar("Chưa có mặt hàng nào trong giỏ.", "warning")
             return;
         }
 
+        if (token != null) {
+            if (addressFormInput.current.province == null || addressFormInput.current.district == null || addressFormInput.current.ward == null) {
+                showSnackbar("Bạn chưa chọn xong địa chỉ.", "warning")
+                return;
+            }
+
+            const customerInfo = {
+                fullname: addressFormInput.current.fullname,
+                phone: addressFormInput.current.phone,
+                address: addressFormInput.current.address,
+                provinceId: addressFormInput.current.province.ProvinceID,
+                provinceName: addressFormInput.current.province.ProvinceName,
+                districtId: addressFormInput.current.district.DistrictID,
+                districtName: addressFormInput.current.district.DistrictName,
+                wardCode: addressFormInput.current.ward.WardCode,
+                wardName: addressFormInput.current.ward.WardName,
+            }
+
+            submitCart(customerInfo, payment, addressFormInput.current.email).then(res => {
+                console.log(res);
+                let navigateModel = { pathname: `/purchase/${res}` }
+                if (token) {
+                    navigateModel = { ...navigateModel, search: `?token=${token}` }
+                }
+                navigate(navigateModel)
+                showSnackbar("Đặt hàng thành công.")
+                clearCart()
+            }).catch(error => {
+                if (error.response && error.response.status === 400) {
+                    showSnackbar(error.response.data, "error")
+                } else {
+                    showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
+                }
+            })
+        } else if (selectedCustomerInfo) {
+
+            const customerInfo = {
+                id: selectedCustomerInfo
+            }
+
+            submitCart(customerInfo, payment, null).then(res => {
+                navigate({ pathname: `/purchase/${res}` })
+                showSnackbar("Đặt hàng thành công.")
+                clearCart()
+            }).catch(error => {
+                if (error.response && error.response.status === 400) {
+                    showSnackbar(error.response.data, "error")
+                } else {
+                    showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
+                }
+            })
+        }
+    }
+
+    const handleChangeCollapse = () => {
+        setChecked((prev) => !prev);
+    };
+
+    const handleAddAddress = async () => {
         const customerInfo = {
-            fullname: ghnAddress.current.fullname,
-            phone: ghnAddress.current.phone,
-            address: ghnAddress.current.address,
-            provinceId: ghnAddress.current.province.ProvinceID,
-            provinceName: ghnAddress.current.province.ProvinceName,
-            districtId: ghnAddress.current.district.DistrictID,
-            districtName: ghnAddress.current.district.DistrictName,
-            wardCode: ghnAddress.current.ward.WardCode,
-            wardName: ghnAddress.current.ward.WardName,
+            fullname: addressFormInput.current.fullname,
+            phone: addressFormInput.current.phone,
+            address: addressFormInput.current.address,
+            provinceId: addressFormInput.current.province.ProvinceID,
+            provinceName: addressFormInput.current.province.ProvinceName,
+            districtId: addressFormInput.current.district.DistrictID,
+            districtName: addressFormInput.current.district.DistrictName,
+            wardCode: addressFormInput.current.ward.WardCode,
+            wardName: addressFormInput.current.ward.WardName,
         }
 
-        submitCart(customerInfo, payment, ghnAddress.current.email).then(res => {
-            console.log(res);
-            let navigateModel = { pathname: `/purchase/${res}` }
-            if (token) {
-                navigateModel = { ...navigateModel, search: `?token=${token}` }
-            }
-            navigate(navigateModel)
-            showSnackbar("Đặt hàng thành công.")
-            clearCart()
-        }).catch(error => {
+        try {
+            const data = await createAddress(customerInfo);
+            const rs = await getAddresses(account.id);
+            setCustomerInfos(rs);
+            resetCustomerInfoInput();
+            setChecked(false);
+            handleSelectAddress(data)
+        } catch (error) {
             if (error.response && error.response.status === 400) {
                 showSnackbar(error.response.data, "error")
             } else {
                 showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
             }
-        })
+        }
+    }
+
+    const handleAddressSelectDone = () => {
+        getDeliveryInfo(id, addressFormInput.current.district.DistrictID, addressFormInput.current.ward.WardCode).then(response => setDelivery(response))
+    }
+
+    const handleSelectAddress = (address) => {
+        setSelectedCustomerInfo(address.id)
+        getDeliveryInfo(id, address.districtId, address.wardCode).then(response => setDelivery(response))
+    }
+
+    const resetCustomerInfoInput = () => {
+        addressFormInput.current = {
+            province: null,
+            district: null,
+            ward: null,
+            fullname: null,
+            phone: null,
+            address: null,
+            email: null
+        }
     }
 
     return (<>
@@ -122,22 +183,54 @@ export default function CartOrderForm({ id, total, token }) {
                 <div className="m-0 py-2 border-bottom fw-bold">THÔNG TIN NHẬN HÀNG</div>
                 <Grid container spacing={6} paddingTop={3} alignItems={"start"}>
                     <Grid container item md={8}>
+                        {customerInfos &&
+                            <Container disableGutters>
+                                <Stack spacing={1} py={2}>
+                                    {customerInfos.map(address =>
+                                        <Grid container key={address.id} className="border-bottom">
+                                            <Grid item lg={8} xs={12}>
+                                                <Stack>
+                                                    <Typography variant="h6" gutterBottom>
+                                                        {address.fullname}
+                                                    </Typography>
+                                                    <Typography variant="body1" gutterBottom>
+                                                        {address.phone}
+                                                    </Typography>
+                                                    <Typography variant="subtitle2" gutterBottom>
+                                                        {`${address.address}, ${address.wardName}, ${address.districtName}, ${address.provinceName}`}
+                                                    </Typography>
+                                                </Stack>
+                                            </Grid>
+                                            <Grid item container lg={4} xs={12} justifyContent={"center"} alignItems={"center"}>
+                                                <Stack direction="row" spacing={2}>
+                                                    {
+                                                        address.id !== selectedCustomerInfo &&
+                                                        <Button variant="contained" onClick={() => { handleSelectAddress(address) }}>Chọn Địa Chỉ</Button>
+                                                    }
 
-                        <CartOrderInput setGHNFullname={setGHNFullname} setGHNPhone={setGHNPhone} setGHNAddress={setGHNAddress} setGHNEmail={setGHNEmail} />
+                                                    {
+                                                        address.id === selectedCustomerInfo &&
+                                                        <Button variant="outlined" color="error">Địa Chỉ Nhận Hàng</Button>
+                                                    }
+                                                </Stack>
+                                            </Grid>
+                                        </Grid>
+                                    )}
+                                    <FormControlLabel onChange={handleChangeCollapse} control={<Switch />} label="Thêm địa chỉ" />
+                                </Stack>
+                            </Container>
 
-                        <Grid pt={3} container spacing={1}>
-                            <Grid item md={4} xs={12}>
-                                <ProvinceSelector setProvince={setProvince} />
-                            </Grid>
-                            <Grid item md={4} xs={12}>
-                                <DistrictSelector setDistrict={setDistrict} />
-                            </Grid>
-                            <Grid item md={4} xs={12}>
-                                <WardSelector setWard={setWard} />
-                            </Grid>
-                        </Grid>
-
-
+                        }
+                        <Container disableGutters>
+                            <Collapse in={checked}>
+                                <AccountAddressForm addressFormInput={addressFormInput} handleDone={handleAddressSelectDone} haveEmail={account.id == null} />
+                                {account.id &&
+                                    <Box display={"flex"} justifyContent={"flex-end"} pt={3}>
+                                        <Button onClick={handleAddAddress} variant="contained">Thêm Địa Chỉ</Button>
+                                    </Box>
+                                }
+                            </Collapse>
+                        </Container>
                         <Grid item xs={12} pt={3} alignItems={"center"}>
                             {
                                 delivery.leadtime &&
@@ -168,8 +261,7 @@ export default function CartOrderForm({ id, total, token }) {
                                     defaultValue="1"
                                     name="radio-buttons-group"
                                     value={payment}
-                                    onChange={e => setPayment(e.target.value)}
-                                >
+                                    onChange={e => setPayment(e.target.value)}>
                                     <FormControlLabel value="COD" control={<Radio />} label="Thanh toán khi nhận hàng" />
                                     <FormControlLabel value="BANKING" control={<Radio />} label="Thanh toán bằng chuyển khoản" />
                                 </RadioGroup>
@@ -201,8 +293,6 @@ export default function CartOrderForm({ id, total, token }) {
                                     </button>
                                 </div>
                             </Grid>
-
-
                         </Grid>
                     </Grid>
                 </Grid>

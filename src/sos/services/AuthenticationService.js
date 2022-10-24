@@ -20,15 +20,16 @@ export const addAuthenticationInterceptor = () => {
     const interceptor = axios.interceptors.response.use(
         response => response,
         async error => {
-            console.log(error);
             axios.interceptors.response.eject(interceptor);
             const auth = getAuthenticatedUser();
-            if (auth != null) {
+            if (error.response && error.response.status === 403 && auth != null) {
                 return refreshToken(auth.refreshToken).then(response => {
                     error.response.config.headers.Authorization = `${response.data.type} ${response.data.token}`;
                     return axios(error.response.config);
                 }).catch(error => {
-                    removeAuthFromStorage()
+                    if (error.response && error.response.status === 403) {
+                        removeAuthFromStorage()
+                    }
                     return Promise.reject(error);
                 }).finally(addAuthenticationInterceptor);
             }

@@ -16,12 +16,15 @@ export default function PurchaseDetail() {
 
 
     useEffect(() => {
+        if (params.id == null) {
+            return;
+        }
         if (searchParams.get("token")) {
             getAnonymousPurchase(params.id, searchParams.get("token")).then(data => {
                 setData(data)
             })
         } else {
-            getPurchase().then(data => {
+            getPurchase(params.id).then(data => {
                 setData(data)
             })
         }

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Container, Grid, Stack, TextField } from "@mui/material";
-import DistrictSelector from "../cart/DistrictSelector";
-import ProvinceSelector from "../cart/ProvinceSelector";
-import WardSelector from "../cart/WardSelector";
+import DistrictSelector from "./DistrictSelector";
 import { fetchProvincesToStore } from "../../services/DeliveryService";
+import ProvinceSelector from "./ProvinceSelector";
+import WardSelector from "./WardSelector";
 
-export default function AccountAddressForm({ haveEmail, addressFormInput }) {
+export default function AccountAddressForm({ haveEmail, addressFormInput, handleDone }) {
 
     useEffect(() => {
         fetchProvincesToStore();
@@ -31,6 +31,9 @@ export default function AccountAddressForm({ haveEmail, addressFormInput }) {
 
     const setWard = ward => {
         addressFormInput.current.ward = ward;
+        if (handleDone != null) {
+            handleDone();
+        }
     }
 
     const setFullname = fullname => {
@@ -55,7 +58,7 @@ export default function AccountAddressForm({ haveEmail, addressFormInput }) {
 
     return (<>
         <Container disableGutters>
-            <Stack spacing={2} p={3} alignItems={"flex-end"}>
+            <Stack spacing={2} alignItems={"flex-end"}>
                 <TextField label="Họ và tên" value={input.fullname} onChange={e => { setFullname(e.target.value) }} variant="outlined" fullWidth />
                 <TextField label="Số điện thoại" onChange={e => { setPhone(e.target.value) }} variant="outlined" fullWidth />
                 {haveEmail && <TextField label="Email" type="email" onChange={e => { setEmail(e.target.value) }} variant="outlined" fullWidth />}

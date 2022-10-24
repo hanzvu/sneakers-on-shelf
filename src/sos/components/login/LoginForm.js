@@ -23,12 +23,12 @@ export default function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
 
     const LoginSchema = Yup.object().shape({
-        email: Yup.string().email('Email không đúng định dạng.').required('Vui lòng nhập email.'),
+        username: Yup.string().required('Vui lòng nhập tên tài khoản.'),
         password: Yup.string().required('Vui lòng nhập mật khẩu.'),
     });
 
     const defaultValues = {
-        email: '',
+        username: '',
         password: '',
         remember: true,
     };
@@ -64,7 +64,7 @@ export default function LoginForm() {
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Stack spacing={3}>
-                <RHFTextField name="email" label="Email" />
+                <RHFTextField name="username" label="Tên tài khoản" />
 
                 <RHFTextField
                     name="password"

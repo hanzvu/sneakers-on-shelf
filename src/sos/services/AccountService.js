@@ -17,6 +17,21 @@ export const getAddresses = async (id) => {
     return response.data;
 }
 
+export const createAddress = async (data) => {
+    const response = await axios.post(`${BASE_API}/api/v1/customer-infos`, data);
+    return response.data;
+}
+
+export const setDefaultAddress = async (id) => {
+    const response = await axios.put(`${BASE_API}/api/v1/customer-infos/${id}/set-default`);
+    return response.data;
+}
+
+export const deactiveAddress = async (id) => {
+    const response = await axios.put(`${BASE_API}/api/v1/customer-infos/${id}/deactive`);
+    return response.data;
+}
+
 export const logoutAccount = () => {
     store.dispatch(clearAccount())
 }

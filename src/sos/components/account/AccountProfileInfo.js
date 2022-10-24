@@ -4,6 +4,7 @@ export default function AccountProfileInfo() {
     return (<>
         <Paper elevation={3} square>
             <Stack spacing={2} p={3}>
+                <TextField label="Họ và tên" variant="outlined" fullWidth />
                 <TextField label="Email" type="email" variant="outlined" fullWidth />
             </Stack>
         </Paper>

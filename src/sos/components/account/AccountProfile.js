@@ -27,11 +27,11 @@ export default function AccountProfile() {
                                     <img alt="avatar" src="http://bizweb.dktcdn.net/100/413/756/themes/837736/assets/account.png?1637743737568" />
                                 </Grid>
                                 <Grid item xs={8}>
-                                    vulongbn1999
+                                    <Link variant="subtitle1" underline="hover" to={"/account"} color="inherit" component={RouterLink}>Tài Khoản</Link>
                                 </Grid>
                             </Grid>
 
-                            <Link variant="subtitle1" underline="hover" to={"/account"} color="inherit" component={RouterLink}>Đơn Hàng</Link>
+                            <Link variant="subtitle1" underline="hover" to={"/account/purchase"} color="inherit" component={RouterLink}>Đơn Hàng</Link>
                             <Link variant="subtitle1" underline="hover" to={"/account/address"} color="inherit" component={RouterLink}>Địa Chỉ</Link>
                             <Link variant="subtitle1" underline="hover" to={"/account/change-password"} color="inherit" component={RouterLink}>Đổi Mật Khẩu</Link>
                             <Link variant="subtitle1" underline="hover" to={"/account/logout"} onClick={handleLogout} color="inherit" component={RouterLink}>Đăng Xuất</Link>
