@@ -4,9 +4,7 @@ import DashboardLayout from './layouts/dashboard';
 //
 import Blog from './pages/Blog';
 import User from './pages/User';
-import Login from './pages/Login';
 import NotFound from './pages/Page404';
-import Register from './pages/Register';
 import Products from './pages/Products';
 import DashboardApp from './pages/DashboardApp';
 import HomeLayout from './sos/layouts';
@@ -21,6 +19,7 @@ import AccountProfileInfo from './sos/components/account/AccountProfileInfo';
 import AccountAddress from './sos/components/account/AccountAddress';
 import AccountChangePassword from './sos/components/account/AccountChangePassword';
 import AccountPurchase from './sos/components/account/AccountPurchase';
+import OAuthRedirected from './sos/components/login/OAuthRedirected';
 
 // ----------------------------------------------------------------------
 
@@ -37,8 +36,10 @@ export default function Router() {
       ],
     },
     {
-      path: 'register',
-      element: <Register />,
+      path: 'oauth2',
+      children: [
+        { path: 'redirect', element: <OAuthRedirected /> },
+      ],
     },
     {
       element: <HomeLayout />,

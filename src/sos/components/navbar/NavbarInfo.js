@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Badge, Link, Stack } from '@mui/material';
+import { Avatar, Badge, Box, Link, Stack, styled } from '@mui/material';
 import { useSelector } from 'react-redux';
 
 export default function NavbarInfo() {
@@ -13,17 +13,31 @@ export default function NavbarInfo() {
             <div className="h-100 row d-flex justify-content-center m-0">
                 <div className="col-6 px-0 d-flex justify-content-center align-items-center">
                     <Stack alignItems={"center"}>
-                        <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/login'} />
                         {
                             account.email &&
-                            <Link variant="subtitle2" underline="hover" to={"/account"} color="inherit" component={RouterLink}>{account.email}</Link>
+                            <>
+                                {
+                                    account.picture &&
+                                    <Link to={"/account"} component={RouterLink}>
+                                        <Avatar alt="avt" src={account.picture} referrerpolicy="no-referrer" />
+                                    </Link>
+                                }
+                                {
+                                    account.picture == null &&
+                                    <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/account'} />
+                                }
+                                <Link variant="subtitle2" underline="hover" to={"/account"} color="inherit" component={RouterLink}>{account.email}</Link>
+                            </>
                         }
 
                         {
                             !account.email &&
-                            <div>
-                                <Link variant="subtitle2" underline="hover" to={"/login"} color="inherit" component={RouterLink}>Đăng nhập</Link> / <Link variant="subtitle2" underline="hover" to={"/register"} color="inherit" component={RouterLink}>Đăng ký</Link>
-                            </div>
+                            <>
+                                <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/login'} />
+                                <div>
+                                    <Link variant="subtitle2" underline="hover" to={"/login"} color="inherit" component={RouterLink}>Đăng nhập</Link> / <Link variant="subtitle2" underline="hover" to={"/register"} color="inherit" component={RouterLink}>Đăng ký</Link>
+                                </div>
+                            </>
                         }
 
                     </Stack>
@@ -43,3 +57,11 @@ export default function NavbarInfo() {
         </div>
     </>)
 }
+
+const ProductImgStyle = styled('img')({
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    position: 'absolute',
+});

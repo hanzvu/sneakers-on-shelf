@@ -70,7 +70,7 @@ export default function AccountAddress() {
 
     return (<>
         <Stack spacing={3}>
-            {addresses && <AccountAddressContainer addresses={addresses} id={account.customerInfo.id} />}
+            {addresses && <AccountAddressContainer addresses={addresses} id={account.customerInfo ? account.customerInfo.id : null} />}
             <Paper elevation={3} square>
                 <Box p={3}>
                     <AccountAddressForm addressFormInput={addressFormInput} />

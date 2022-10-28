@@ -40,7 +40,7 @@ export const addAuthenticationInterceptor = () => {
 
 export const login = async (account) => {
     const response = await axios.post(`${BASE_API}/api/v1/tokens/signin`, account);
-    localStorage.setItem("auth", JSON.stringify(response.data));
+    setAuthentication(response.data);
 }
 
 export const refreshToken = async (token) => {
@@ -49,8 +49,12 @@ export const refreshToken = async (token) => {
             'Content-Type': 'text/plain'
         }
     });
-    localStorage.setItem("auth", JSON.stringify(response.data));
+    setAuthentication(response.data);
     return response;
+}
+
+export const setAuthentication = data => {
+    localStorage.setItem("auth", JSON.stringify(data));
 }
 
 export const getAuthenticatedUser = () => JSON.parse(localStorage.getItem('auth'));
