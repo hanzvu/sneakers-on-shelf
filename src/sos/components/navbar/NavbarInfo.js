@@ -19,14 +19,14 @@ export default function NavbarInfo() {
                                 {
                                     account.picture &&
                                     <Link to={"/account"} component={RouterLink}>
-                                        <Avatar alt="avt" src={account.picture} referrerpolicy="no-referrer" />
+                                        <Avatar alt="avt" src={account.picture} referrerPolicy="no-referrer" />
                                     </Link>
                                 }
                                 {
                                     account.picture == null &&
                                     <Link className="text-dark h2 m-0 bi bi-person-circle" to={'/account'} />
                                 }
-                                <Link variant="subtitle2" underline="hover" to={"/account"} color="inherit" component={RouterLink}>{account.email}</Link>
+                                <Link variant="subtitle2" underline="hover" to={"/account"} color="inherit" component={RouterLink}>{account.fullname}</Link>
                             </>
                         }
 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux'
 import store from './sos/redux/store';
 // routes
@@ -15,15 +15,6 @@ import { fetchAccount } from './sos/services/AccountService';
 // ----------------------------------------------------------------------
 
 export default function App() {
-
-  useEffect(() => {
-    const fetchData = async () => {
-      addAuthenticationInterceptor();
-      await fetchAccount();
-      fetchCart();
-    }
-    fetchData();
-  }, [])
 
   return (
     <Provider store={store}>
