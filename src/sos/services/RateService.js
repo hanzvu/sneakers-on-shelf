@@ -12,8 +12,13 @@ const addRate = async (id, score, comment) => {
     })     
 }
 
-const findRatesByProductID = async (id) => {
-    const rates = await axios.get(`${BASE_API}/api/v1/product-details/${id}/rates`)
+const findRatesByProductID = async (id, page, rowsPerPage) => {
+    const rates = axios.get(`${BASE_API}/api/v1/product-details/${id}/rates`, {
+        params: {
+          page: `${page}`,
+          size: `${rowsPerPage}`
+        }
+      })
     return rates;
 }
 

@@ -4,19 +4,48 @@ import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { Avatar, Grid, Rating, TextField, Typography } from '@mui/material';
+import { Avatar, Grid, Rating, TablePagination, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
-import TablePagination from "../../redux/TablePagination";
+import { findRatesByProductID } from '../../services/RateService';
 
-export default function ProductDetailDescription(rates) {
+
+
+export default function ProductDetailDescription(product) {
+    const [value, setValue] = React.useState('3');
+    const [avatar, setAvatar] = React.useState("assets/img/user");
+    const [rate, setRate] = React.useState();
+    const [totalElements, setTotalElements] = React.useState(100);
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    React.useEffect(() => {
+        findRatesByProductID(product.id, page, rowsPerPage).then(rates => {
+            setRate(rates.data)
+            setTotalElements(rates.data.totalElements)
+        })
+    }, [product.id])
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+        findRatesByProductID(product.id, newPage, rowsPerPage).then(rates => {
+            setRate(rates.data)
+            setTotalElements(rates.data.totalElements)
+        })
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+        findRatesByProductID(product.id, 0, parseInt(event.target.value, 10)).then(rates => {
+            setRate(rates.data)
+            setTotalElements(rates.data.totalElements)
+        })
+    };
 
     const formatDatetime = date => (new Intl.DateTimeFormat(['ban', 'id'], {
         year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit',
         minute: '2-digit',
         hour12: true
     }).format(date))
-
-    const [value, setValue] = React.useState('3');
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -97,31 +126,54 @@ export default function ProductDetailDescription(rates) {
                                             Bộ lọc đánh giá ở đây
                                         </div>
                                     </div>
-                                    {
-                                        rates.rates.content.map((r) => (
-                                            <>
-                                                <Grid container spacing={5} pl={3}>
-                                                    <Grid item xs={0.7} alignSelf="center">
-                                                        <Avatar><PersonIcon /></Avatar>
-                                                    </Grid>
-                                                    <Grid item xs={9} >
-                                                        <Typography variant='h6'>{r.fullname}</Typography>
-                                                        <Rating name="size-small" defaultValue={r.score} size="small" readOnly />
-                                                    </Grid>
-                                                </Grid>
-                                                <Grid container spacing={5} pl={3} mb={5}>
-                                                    <Grid item xs={0.7} alignSelf="center"> </Grid>
-                                                    <Grid item xs={9} >
-                                                        <Typography variant='body2' p={1} pl={0}>{formatDatetime(new Date(r.createDate))}<span className="text-sm text-muted font-weight-normal ml-3">&nbsp;| Phân loại hàng: size {r.size} </span></Typography>
-                                                        <Typography variant='body1'>{r.comment}</Typography>
-                                                    </Grid>
-                                                </Grid>
-                                                <hr />
-                                            </>
-                                        ))
-                                    }
+                                    {rate != null && (
+                                        <>
+                                            {
+                                                rate.content.map((r) => (
+                                                    <Box key={r.id}>
+                                                        {r.picture !== "" &&
+                                                            (setAvatar(`assets/img/${r.picture}`))
+                                                        }
+                                                        <Grid container spacing={5} pl={3}>
+                                                            {r.picture === ""
+                                                                ? <>
+                                                                    <Grid item xs={0.7} alignSelf="center">
+                                                                        <Avatar><PersonIcon /></Avatar>
+                                                                    </Grid>
+                                                                </>
+                                                                : <>
+                                                                    <Grid item xs={0.7} alignSelf="center">
+                                                                        <Avatar src={avatar}> </Avatar>
+                                                                    </Grid>
+                                                                </>
+                                                            }
+                                                            <Grid item xs={9} >
+                                                                <Typography variant='h6'>{r.fullname}</Typography>
+                                                                <Rating name="size-small" defaultValue={r.score} size="small" readOnly />
+                                                            </Grid>
+                                                        </Grid>
+                                                        <Grid container spacing={5} pl={3} mb={5}>
+                                                            <Grid item xs={0.7} alignSelf="center"> </Grid>
+                                                            <Grid item xs={9} >
+                                                                <Typography variant='body2' p={1} pl={0}>{formatDatetime(new Date(r.createDate))}<span className="text-sm text-muted font-weight-normal ml-3">&nbsp;| Phân loại hàng: size {r.size} </span></Typography>
+                                                                <Typography variant='body1'>{r.comment}</Typography>
+                                                            </Grid>
+                                                        </Grid>
+                                                        <hr />
+                                                    </Box>
+                                                ))
+                                            }
+                                        </>
+                                    )}
                                     <Grid alignSelf="center">
-                                        <TablePagination/>
+                                        <TablePagination
+                                            component="controller"
+                                            count={totalElements}
+                                            page={page}
+                                            onPageChange={handleChangePage}
+                                            rowsPerPage={rowsPerPage}
+                                            onRowsPerPageChange={handleChangeRowsPerPage}
+                                        />
                                     </Grid>
                                 </TabPanel>
                             </TabContext>
@@ -132,3 +184,5 @@ export default function ProductDetailDescription(rates) {
         </div>
     </>);
 }
+
+
