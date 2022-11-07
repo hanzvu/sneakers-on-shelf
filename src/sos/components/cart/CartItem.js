@@ -21,12 +21,11 @@ export default function CartItem({ item }) {
 
     return (<>
         <Grid container spacing={1} py={3} className={"border-bottom"}>
-            <Grid item container lg={7}>
-
-                <Grid item xs={4} lg={3}>
+            <Grid item container lg={7} spacing={3}>
+                <Grid item lg={3} xs={12}>
                     <Link to={`/products/${productId}`}><img src={image} className="img-fluid" alt='product' /></Link>
                 </Grid>
-                <Grid item container xs={8} justifyContent={"space-around"} direction={"column"}>
+                <Grid item container lg={9} xs={12} justifyContent={"space-around"} direction={"column"}>
                     <Typography variant="h5" gutterBottom>
                         {name}
                     </Typography>

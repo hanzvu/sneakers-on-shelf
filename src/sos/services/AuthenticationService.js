@@ -1,28 +1,46 @@
 import axios from "axios";
+import { logoutAccount } from "./AccountService";
 import { BASE_API } from "./ApplicationConstant";
+import { clearCart, getCartFromLocalStorage } from "./CartService";
 
-export const authenticatedRequest = async (instance) => {
-    await instance.interceptors.response.use((response) => response, async (error) => {
-        const originalRequest = error.config;
-        const user = getAuthenticatedUser();
-        if (error.response.status === 403 && !originalRequest._retry && user != null) {
-            originalRequest._retry = true;
-            try {
-                const response = await refreshToken(user.refreshToken);
-                originalRequest.headers.Authorization = `${response.data.type} ${response.data.token}`;
-                return instance(originalRequest);
-            } catch (error) {
-                logout();
+export const addAuthenticationInterceptor = () => {
+    axios.interceptors.request.use((config) => {
+        const auth = getAuthenticatedUser();
+        if (auth) {
+            config.headers.Authorization = `${auth.type} ${auth.token}`;
+        } else {
+            const cart = getCartFromLocalStorage();
+            if (cart) {
+                config.headers.token = cart.token;
             }
         }
-        return Promise.reject(error);
-    });
+        return config;
+    }, (error) => Promise.reject(error));
+
+    const interceptor = axios.interceptors.response.use(
+        response => response,
+        async error => {
+            axios.interceptors.response.eject(interceptor);
+            const auth = getAuthenticatedUser();
+            if (error.response && (error.response.status === 403 || error.response.status === 401) && auth != null) {
+                return refreshToken(auth.refreshToken).then(response => {
+                    error.response.config.headers.Authorization = `${response.data.type} ${response.data.token}`;
+                    return axios(error.response.config);
+                }).catch(error => {
+                    if (error.response && error.response.status === 403) {
+                        removeAuthFromStorage()
+                    }
+                    return Promise.reject(error);
+                }).finally(addAuthenticationInterceptor);
+            }
+            return Promise.reject(error);
+        }
+    );
 }
 
-export const login = async (email, password) => {
-    const response = await axios.post(`${BASE_API}/api/v1/tokens/signin`, { email, password });
-    localStorage.setItem("user", JSON.stringify(response.data));
-    axios.defaults.headers.Authorization = `${response.data.type} ${response.data.token}`;
+export const login = async (account) => {
+    const response = await axios.post(`${BASE_API}/api/v1/tokens/signin`, account);
+    setAuthentication(response.data);
 }
 
 export const refreshToken = async (token) => {
@@ -31,13 +49,23 @@ export const refreshToken = async (token) => {
             'Content-Type': 'text/plain'
         }
     });
-    localStorage.setItem("user", JSON.stringify(response.data));
-    axios.defaults.headers.Authorization = `${response.data.type} ${response.data.token}`;
+    setAuthentication(response.data);
     return response;
 }
 
-export const getAuthenticatedUser = () => JSON.parse(localStorage.getItem('user'));
+export const setAuthentication = data => {
+    localStorage.setItem("auth", JSON.stringify(data));
+}
+
+export const getAuthenticatedUser = () => JSON.parse(localStorage.getItem('auth'));
+
+const removeAuthFromStorage = () => {
+    localStorage.removeItem("auth");
+}
 
 export const logout = () => {
-    localStorage.removeItem("user");
+    removeAuthFromStorage();
+    logoutAccount();
+    clearCart();
 }
+

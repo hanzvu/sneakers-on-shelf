@@ -1,8 +1,8 @@
 import { Container, Link, styled, Typography } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import Page from "../../components/Page";
-import AuthSocial from "../../sections/auth/AuthSocial";
-import { LoginForm } from "../../sections/auth/login";
+import AuthSocial from "../components/login/AuthSocial";
+import LoginForm from "../components/login/LoginForm";
 
 
 const RootStyle = styled('div')(({ theme }) => ({

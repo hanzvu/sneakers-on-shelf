@@ -5,7 +5,7 @@ export const cartSlice = createSlice({
     initialState: {
         cart: {
             id: null,
-            userTokenQuery: null
+            token: null
         }
     },
     reducers: {
@@ -15,7 +15,7 @@ export const cartSlice = createSlice({
         removeCart: state => {
             state.cart = {
                 id: null,
-                userTokenQuery: null
+                token: null
             }
         }
     }
