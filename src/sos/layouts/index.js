@@ -16,8 +16,12 @@ export default function HomeLayout() {
     useEffect(() => {
         const fetchData = async () => {
             addAuthenticationInterceptor();
-            await fetchAccount();
-            await fetchCart();
+            try {
+                await fetchAccount();
+                await fetchCart();
+            } catch (error) {
+                console.log(error);
+            }
             setLoading(false);
         }
         fetchData();
