@@ -29,10 +29,9 @@ export default function ShopProduct({ product }) {
     const { id, name, image, sellPrice, originalPrice } = product;
 
     return (
-        <>
-            <Card>
-                <Box sx={{ pt: '100%', position: 'relative' }}>
-                    {/* {originalPrice > sellPrice && (
+        <Card className='h-100'>
+            <Box sx={{ pt: '100%', position: 'relative' }}>
+                {/* {originalPrice > sellPrice && (
                         <Label
                             variant="filled"
                             color={'error'}
@@ -46,21 +45,21 @@ export default function ShopProduct({ product }) {
                             Sale - {parseInt((100 * sellPrice) / originalPrice, 10)} %
                         </Label>
                     )} */}
-                    <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
-                        <ProductImgStyle alt={name} src={image} />
-                    </Link>
-                </Box>
+                <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
+                    <ProductImgStyle alt={name} src={image} />
+                </Link>
+            </Box>
 
-                <Stack spacing={2} sx={{ p:2 }}>
-                    <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
-                        <Typography variant="subtitle1">
-                            {name}
-                        </Typography>
-                    </Link>
+            <Stack spacing={2} sx={{ p: 2 }}>
+                <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
+                    <Typography variant="subtitle1">
+                        {name}
+                    </Typography>
+                </Link>
 
-                    <Stack direction="row" alignItems="center" justifyContent="flex-end">
-                        <Typography variant="subtitle1" className='text-danger'>
-                            {/* <Typography
+                <Stack direction="row" alignItems="center" justifyContent="flex-end">
+                    <Typography variant="subtitle1" className='text-danger'>
+                        {/* <Typography
                                 component="span"
                                 variant="body1"
                                 sx={{
@@ -70,11 +69,10 @@ export default function ShopProduct({ product }) {
                             >
                                 {originalPrice && fCurrency(originalPrice)}
                             </Typography> */}
-                            {fCurrency(sellPrice)}
-                        </Typography>
-                    </Stack>
+                        {fCurrency(sellPrice)}
+                    </Typography>
                 </Stack>
-            </Card>
-        </>
+            </Stack>
+        </Card>
     );
 }
