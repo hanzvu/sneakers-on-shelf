@@ -20,13 +20,13 @@ export default function ProductDetailLayout() {
     }, [params.id])
 
     return (<>
-        <Page title={product ? product.name : null}>
+        <Page title={product ? product.name : 'Sneaker'}>
             <Container>
                 <Grid container>
                     {product &&
                         <>
                             <ProductDetail product={product} />
-                            <ProductDetailDescription id={product.id}/>
+                            <ProductDetailDescription product={product}/>
                         </>
                     }
                 </Grid>

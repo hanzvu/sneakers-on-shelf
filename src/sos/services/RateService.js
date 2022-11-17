@@ -12,9 +12,10 @@ const addRate = async (id, score, comment) => {
     })     
 }
 
-const findRatesByProductID = async (id, page, rowsPerPage) => {
+const findRatesByProductID = async (id, score ,page, rowsPerPage) => {
     const rates = axios.get(`${BASE_API}/api/v1/product-details/${id}/rates`, {
         params: {
+          score: `${score}`,
           page: `${page}`,
           size: `${rowsPerPage}`
         }
