@@ -19,7 +19,7 @@ export default function NavbarInfo() {
                                 {
                                     account.picture &&
                                     <Link to={"/account"} component={RouterLink}>
-                                        <Avatar alt="avt" src={account.picture} referrerPolicy="no-referrer" />
+                                        <Avatar alt="avt" src={account.picture} imgProps={{ referrerPolicy: "no-referrer" }} />
                                     </Link>
                                 }
                                 {

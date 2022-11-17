@@ -13,13 +13,9 @@ const fetchCart = async () => {
     })
 }
 
-const submitCart = async (customerInfo, paymentMethod, email = null) => {
+const submitCart = async (data) => {
     const cart = await getOrCreateCart();
-    const response = await axios.post(`${BASE_API}/api/v1/cart/${cart.id}/submit`, {
-        customer_info: customerInfo,
-        payment_method: paymentMethod,
-        email
-    });
+    const response = await axios.post(`${BASE_API}/api/v1/cart/${cart.id}/submit`, data);
     return response.data;
 }
 

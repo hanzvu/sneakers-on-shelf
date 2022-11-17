@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "@emotion/styled";
 import { Link as RouterLink } from 'react-router-dom';
-import { Link, Paper, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Chip, Link, Paper, Table, TableBody, TableCell, tableCellClasses, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { getPurchaseByAccountId } from "../../services/PurchaseService";
 import { fCurrency } from "../../../utils/formatNumber";
-import { formatDatetime } from "../../utils/DateUtil";
 
 export default function AccountPurchase() {
 
@@ -32,23 +31,23 @@ export default function AccountPurchase() {
                     <Table sx={{ minWidth: 700 }} aria-label="customized table">
                         <TableHead>
                             <TableRow>
-                                <StyledTableCell align="center">TRẠNG THÁI ĐƠN</StyledTableCell>
-                                <StyledTableCell align="center">THANH TOÁN</StyledTableCell>
+                                <StyledTableCell align="center">MÃ ĐƠN HÀNG</StyledTableCell>
+                                <StyledTableCell align="center">TRẠNG THÁI</StyledTableCell>
                                 <StyledTableCell align="center">TỔNG SỐ SẢN PHẨM</StyledTableCell>
                                 <StyledTableCell align="center">TỔNG SỐ TIỀN</StyledTableCell>
-                                <StyledTableCell align="center">NGÀY ĐẶT</StyledTableCell>
+                                <StyledTableCell align="center">NGÀY TẠO</StyledTableCell>
                                 <StyledTableCell align="center">THAO TÁC</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {
                                 purchases.content.map(purchase => (
-                                    <StyledTableRow>
-                                        <StyledTableCell component="th" scope="row" align="center">
-                                            {purchase.orderStatus.description}
-                                        </StyledTableCell>
+                                    <StyledTableRow key={purchase.id}>
                                         <StyledTableCell align="center">
-                                            {purchase.paymentStatus.description}
+                                            {purchase.id}
+                                        </StyledTableCell>
+                                        <StyledTableCell component="th" scope="row" align="center">
+                                            <Chip label={purchase.orderStatus.description} color={purchase.orderStatus.color} />
                                         </StyledTableCell>
                                         <StyledTableCell align="center">
                                             {purchase.productCount}
@@ -57,7 +56,7 @@ export default function AccountPurchase() {
                                             {fCurrency(purchase.total)}
                                         </StyledTableCell>
                                         <StyledTableCell align="center">
-                                            {formatDatetime(new Date(purchase.createDate))}
+                                            {new Date(purchase.createDate).toLocaleString()}
                                         </StyledTableCell>
                                         <StyledTableCell align="center">
                                             <Link to={`/purchase/${purchase.id}`} color="inherit" underline="hover" component={RouterLink}>

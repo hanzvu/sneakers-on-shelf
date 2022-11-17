@@ -1,7 +1,8 @@
-import { Box, Grid, Link, Paper, Stack, Typography } from "@mui/material";
+import { Box, CardMedia, Grid, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { formatDatetime } from "../../utils/DateUtil";
+import { Timeline, TimelineEvent } from '@mailtop/horizontal-timeline'
+import * as Icons from "react-icons/fa";
 import { fCurrency } from "../../../utils/formatNumber";
 import { getAnonymousPurchase, getPurchase } from "../../services/PurchaseService";
 import OrderItem from "./OrderItem";
@@ -14,17 +15,18 @@ export default function PurchaseDetail() {
 
     const [searchParams] = useSearchParams();
 
-
     useEffect(() => {
         if (params.id == null) {
             return;
         }
         if (searchParams.get("token")) {
             getAnonymousPurchase(params.id, searchParams.get("token")).then(data => {
-                setData(data)
+                console.log(data);
+                setData(data);
             })
         } else {
             getPurchase(params.id).then(data => {
+                console.log(data);
                 setData(data)
             })
         }
@@ -37,125 +39,196 @@ export default function PurchaseDetail() {
 
     return (<>
         <Stack spacing={2}>
-            <Paper elevation={3} square>
-                {
-                    data.delivery &&
+            {
+                data.timelines &&
+                <Paper elevation={3} square>
                     <Box p={{ xs: 1, md: 3 }}>
-                        <Box borderBottom={1} borderColor={"grey.500"}>
-                            <Typography variant="h5" gutterBottom>
-                                GIAO HÀNG
-                            </Typography>
-                        </Box>
-                        <Box pt={3}>
-                            <div className="col-sm-10">
-                                <div className="row m-0 py-2">
-                                    <div className="col-4">Trạng Thái</div>
-                                    <div className="col-8">{data.delivery.deliveryStatus.description}</div>
-                                </div>
-                                <div className="row m-0 py-2">
-                                    <div className="col-4">Cập Nhật Lúc</div>
-                                    <div className="col-8">{formatDatetime(new Date(data.delivery.updateDate))}</div>
-                                </div>
-                                <div className="row m-0 py-2">
-                                    <div className="col-4">Chi tiết</div>
-                                    <div className="col-8"><Link className="link-info" underline="none" href={`https://donhang.ghn.vn/?order_code=${data.delivery.parcelTrackingId}`}>Kiểm tra</Link></div>
-                                </div>
-                            </div>
-                        </Box>
-                    </Box>
-                }
-
-            </Paper>
-
-            <Paper elevation={3} square>
-                <Box p={{ xs: 1, md: 3 }}>
-                    <Box borderBottom={1} borderColor={"grey.500"}>
-                        <Typography variant="h5" gutterBottom>
-                            THANH TOÁN
-                        </Typography>
-                    </Box>
-                    <Box pt={3}>
-                        <div className="col-sm-10">
-                            <div className="row m-0 py-2">
-                                <div className="col-4">Trạng thái thanh toán</div>
-                                <div className="col-8">{data.paymentStatus.description}</div>
-                            </div>
-                            <div className="row m-0 py-2">
-                                <div className="col-4">Phương thức thanh toán</div>
-                                <div className="col-8">{data.paymentMethod.description}</div>
-                            </div>
+                        <Timeline minEvents={6} variant={"default"} placeholder>
                             {
-                                data.paymentQRCode &&
-                                <div className="row m-0 py-2">
-                                    <div className="col-4">Mã QR thanh toán</div>
-                                    <div className="col-8"><img alt="qr" src={data.paymentQRCode} /></div>
-                                </div>
-                            }
-                        </div>
+                                data.timelines.map(timeline => (
+                                    <TimelineEvent
+                                        key={timeline.id}
+                                        color={timeline.orderTimelineType.color}
+                                        icon={Icons[timeline.orderTimelineType.icon]}
+                                        title={timeline.orderTimelineType.title}
+                                        subtitle={new Date(timeline.createdDate).toLocaleString()} />
+                                ))}
+
+                        </Timeline>
                     </Box>
-                </Box>
-            </Paper>
+                </Paper>
+            }
 
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box borderBottom={1} borderColor={"grey.500"}>
                         <Typography variant="h5" gutterBottom>
-                            ĐỊA CHỈ NHẬN HÀNG
+                            THÔNG TIN ĐƠN HÀNG
                         </Typography>
                     </Box>
-                    <Box pt={3}>
-                        <div className="col-sm-10">
-                            <div className="row m-0 py-2">
-                                <div className="col-4">
-                                    Họ và tên
-                                </div>
-                                <div className="col-8">{data.customerInfo.fullname}</div>
-                            </div>
-                            <div className="row m-0 py-2">
-                                <div className="col-4">Số điện thoại</div>
-                                <div className="col-8">{data.customerInfo.phone}</div>
-                            </div>
-                            <div className="row m-0 py-2">
-                                <div className="col-4">Địa chỉ</div>
-                                <div className="col-8">{`${data.customerInfo.address}, ${data.customerInfo.wardName}, ${data.customerInfo.districtName}, ${data.customerInfo.provinceName}`}</div>
-                            </div>
-                        </div>
-                    </Box>
+                    <Stack spacing={3} pt={3} pl={3}>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Trạng Thái
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {data.orderStatus.description}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Mã Đơn Hàng
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {data.id}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Thời Gian Đặt
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {new Date(data.createDate).toLocaleString()}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Họ Và Tên
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {data.fullname}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Số Điện Thoại
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {data.phone}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Email
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {data.email}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container >
+                            <Grid item container xs={4} alignItems={"center"}>
+                                <Typography variant="body1">
+                                    Địa Chỉ
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={8}>
+                                <Typography variant="body1">
+                                    {`${data.detailedAddress}, ${data.address}`}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                    </Stack>
                 </Box>
             </Paper>
 
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box>
-                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} customName={data.customerInfo.fullname} idPurchase={data.id} userTokenQuery={data.userTokenQuery} />))}
+                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} idPurchase={data.id} userTokenQuery={data.token} />))}
                     </Box>
                     <Grid container spacing={1} pt={3} justifyContent={"flex-end"}>
                         <Grid item md={4} xs={12}>
-                            <div className="row justify-content-center">
-                                <div className="col-6">Tiền Hàng</div>
-                                <div className="col-6 d-flex justify-content-end">{fCurrency(data.total)}</div>
-                            </div>
-                            {
-                                data.delivery &&
-                                <div className="row justify-content-center">
-                                    <div className="col-6">Phí vận chuyển</div>
-                                    <div className="col-6 d-flex justify-content-end">{fCurrency(data.delivery.fee)}</div>
-                                </div>
-                            }
-
-                            <div className="row justify-content-center">
-                                <div className="col-6">Giảm giá</div>
-                                <div className="col-6 d-flex justify-content-end">{fCurrency(data.discount)}</div>
-                            </div>
-
-                            <div className="row justify-content-center pt-1">
-                                <div className="col-6 fw-bold">Tổng số tiền</div>
-                                <div className="col-6 d-flex justify-content-end"><span className="text-danger fw-bold">{fCurrency(data.total + (data.delivery != null ? data.delivery.fee : 0) - data.discount)}</span></div>
-                            </div>
+                            <Stack spacing={1}>
+                                <Grid item container >
+                                    <Grid item container xs={6}>
+                                        <Typography variant="body1">
+                                            Tiền Hàng
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} container justifyContent={"flex-end"}>
+                                        <Typography variant="body1">
+                                            {fCurrency(data.total)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container >
+                                    <Grid item container xs={6}>
+                                        <Typography variant="body1">
+                                            Phí vận chuyển
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} container justifyContent={"flex-end"}>
+                                        <Typography variant="body1">
+                                            {fCurrency(data.fee)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container >
+                                    <Grid item container xs={6}>
+                                        <Typography variant="body1">
+                                            Giảm Giá
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} container justifyContent={"flex-end"}>
+                                        <Typography variant="body1">
+                                            {fCurrency(data.discount)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                                <Grid item container >
+                                    <Grid item container xs={6}>
+                                        <Typography sx={{ fontWeight: 'bold' }} >
+                                            Tổng Số Tiền
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} container justifyContent={"flex-end"}>
+                                        <Typography sx={{ fontWeight: 'bold' }} color="error">
+                                            {fCurrency(data.total + data.fee - data.discount)}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Stack>
                         </Grid>
                     </Grid>
                 </Box>
             </Paper>
+
+            {
+                data.paymentQRCode &&
+                <Paper elevation={3} square>
+                    <Box p={{ xs: 1, md: 3 }}>
+                        <Grid container justifyContent={"center"}>
+                            <Grid item md={5} xs={12}>
+                                <CardMedia component="img" image={data.paymentQRCode} alt="green iguana" />
+                            </Grid>
+                        </Grid>
+                    </Box>
+                </Paper>
+            }
         </Stack>
 
     </>)

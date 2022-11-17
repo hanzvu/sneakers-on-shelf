@@ -1,7 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchWardToStore } from "../../services/DeliveryService";
+import { showSnackbar } from "../../services/NotificationService";
+import { clearWardFromStore, fetchWardToStore } from "../../services/DeliveryService";
 
 export default function DistrictSelector({ setDistrict }) {
 
@@ -9,10 +10,15 @@ export default function DistrictSelector({ setDistrict }) {
 
     const districts = useSelector(state => state.ghnDistrict.districts);
 
-    const handleChange = (event) => {
-        setDistrict(districts[event.target.value])
-        fetchWardToStore(event.target.value);
-        setSelectedDistrict(event.target.value);
+    const handleChange = async (event) => {
+        try {
+            await fetchWardToStore(event.target.value);
+            setDistrict(districts[event.target.value])
+            setSelectedDistrict(event.target.value);
+        } catch (error) {
+            clearWardFromStore();
+            showSnackbar("Vị trí không khả dụng.", "warning");
+        }
     };
 
 

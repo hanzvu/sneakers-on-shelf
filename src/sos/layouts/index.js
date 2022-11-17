@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import NotifyModal from "../components/common/Modal";
@@ -9,7 +10,6 @@ import { addAuthenticationInterceptor } from "../services/AuthenticationService"
 import { fetchCart } from "../services/CartService";
 
 export default function HomeLayout() {
-
 
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +34,9 @@ export default function HomeLayout() {
     return (
         <>
             <Navbar />
-            <Outlet />
+            <Box sx={{ minHeight: '30vw' }}>
+                <Outlet />
+            </Box>
             <Footer />
             <NotifyModal />
             <MySnackbar />

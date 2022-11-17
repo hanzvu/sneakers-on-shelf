@@ -1,7 +1,8 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { clearWardFromStore, fetchDistrictToStore } from "../../services/DeliveryService";
+import { showSnackbar } from "../../services/NotificationService";
+import { clearDistrictFromStore, clearWardFromStore, fetchDistrictToStore } from "../../services/DeliveryService";
 
 
 export default function ProvinceSelector({ setProvince }) {
@@ -9,11 +10,16 @@ export default function ProvinceSelector({ setProvince }) {
     const [selectedProvince, setSelectedProvince] = useState(``);
     const provinces = useSelector(state => state.ghnProvince.provinces);
 
-    const handleChange = (event) => {
-        clearWardFromStore();
-        fetchDistrictToStore(event.target.value);
-        setProvince(provinces[event.target.value]);
-        setSelectedProvince(event.target.value);
+    const handleChange = async (event) => {
+        try {
+            clearWardFromStore();
+            await fetchDistrictToStore(event.target.value);
+            setProvince(provinces[event.target.value]);
+            setSelectedProvince(event.target.value);
+        } catch (error) {
+            clearDistrictFromStore();
+            showSnackbar("Vị trí không khả dụng.", "warning");
+        }
     };
 
     return (<>
