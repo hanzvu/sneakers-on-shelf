@@ -1,4 +1,4 @@
-import { Container, Link, styled, Typography } from "@mui/material";
+import { Box, Container, Link, styled, Typography } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import Page from "../../components/Page";
 import AuthSocial from "../components/login/AuthSocial";
@@ -24,24 +24,26 @@ export default function LoginLayout() {
 
 
     return (<>
-        <Page title="Login">
+        <Page title="Đăng Nhập">
             <RootStyle>
                 <Container maxWidth="sm">
-                    <ContentStyle>
-                        <Typography variant="h4" textAlign={"center"} gutterBottom>
-                            ĐĂNG NHẬP
-                        </Typography>
-                        <AuthSocial />
+                    <Box pt={3}>
+                        <ContentStyle>
+                            <Typography variant="h4" textAlign={"center"} gutterBottom>
+                                ĐĂNG NHẬP
+                            </Typography>
+                            <AuthSocial />
 
-                        <LoginForm />
+                            <LoginForm />
 
-                        <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-                            Bạn chưa có tài khoản ?{' '}
-                            <Link variant="subtitle2" component={RouterLink} to="/register">
-                                Đăng ký ngay
-                            </Link>
-                        </Typography>
-                    </ContentStyle>
+                            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                                Bạn chưa có tài khoản ?{' '}
+                                <Link variant="subtitle2" component={RouterLink} to="/register">
+                                    Đăng ký ngay
+                                </Link>
+                            </Typography>
+                        </ContentStyle>
+                    </Box>
                 </Container>
             </RootStyle>
         </Page>

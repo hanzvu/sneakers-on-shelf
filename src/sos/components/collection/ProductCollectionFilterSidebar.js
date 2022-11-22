@@ -7,7 +7,6 @@ import Iconify from "../../../components/Iconify";
 import ProductCollectionGenderFilter from "./ProductCollectionGenderFilter";
 import ProductCollectionBrandFilter from "./ProductCollectionBrandFilter";
 import ProductCollectionCategoryFilter from "./ProductCollectionCategoryFilter";
-import { ProductSort } from "../../../sections/@dashboard/products";
 import ProductCollectionSorter from "./ProductCollectionSorter";
 
 export default function ProductCollectionFilterSidebar({ isOpenFilter, onOpenFilter, onCloseFilter }) {

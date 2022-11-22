@@ -3,11 +3,12 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 
 const SORT_BY_OPTIONS = {
-    'name_asc': { value: 'name_asc', label: 'A -> Z' },
-    'name_desc': { value: 'name_desc', label: 'Z -> A' },
+    'date_desc': { value: 'date_desc', label: 'Mới nhất' },
+    'best_selling': { value: 'best_selling', label: 'Bán chạy nhất' },
     'price_asc': { value: 'price_asc', label: 'Giá tăng dần' },
     'price_desc': { value: 'price_desc', label: 'Giá giảm dần' },
-    'date_desc': { value: 'date_desc', label: 'Hàng mới nhất' },
+    'name_asc': { value: 'name_asc', label: 'Tên : A -> Z' },
+    'name_desc': { value: 'name_desc', label: 'Tên : Z -> A' },
 };
 
 
@@ -37,7 +38,7 @@ export default function ProductCollectionSorter({ value, handleChangeSorter }) {
                 endIcon={<Iconify icon={open ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}>
                 Sắp xếp :&nbsp;
                 <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                    {SORT_BY_OPTIONS[value] == null ? "Thứ Tự" : SORT_BY_OPTIONS[value].label}
+                    {SORT_BY_OPTIONS[value] == null ? "Mặc định" : SORT_BY_OPTIONS[value].label}
                 </Typography>
             </Button>
             <Menu

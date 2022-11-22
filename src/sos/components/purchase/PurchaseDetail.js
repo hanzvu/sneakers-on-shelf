@@ -1,8 +1,9 @@
-import { Box, CardMedia, Grid, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+import { Box, CardMedia, Chip, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Timeline, TimelineEvent } from '@mailtop/horizontal-timeline'
 import * as Icons from "react-icons/fa";
+import Scrollbar from "../../../components/Scrollbar";
 import { fCurrency } from "../../../utils/formatNumber";
 import { getAnonymousPurchase, getPurchase } from "../../services/PurchaseService";
 import OrderItem from "./OrderItem";
@@ -21,17 +22,21 @@ export default function PurchaseDetail() {
         }
         if (searchParams.get("token")) {
             getAnonymousPurchase(params.id, searchParams.get("token")).then(data => {
-                console.log(data);
                 setData(data);
             })
         } else {
             getPurchase(params.id).then(data => {
-                console.log(data);
                 setData(data)
             })
         }
         searchParams.delete("token")
     }, [params])
+
+    const onSuccessRating = () => {
+        getPurchase(params.id).then(data => {
+            setData(data)
+        });
+    }
 
     if (data == null) {
         return null;
@@ -43,18 +48,21 @@ export default function PurchaseDetail() {
                 data.timelines &&
                 <Paper elevation={3} square>
                     <Box p={{ xs: 1, md: 3 }}>
-                        <Timeline minEvents={6} variant={"default"} placeholder>
-                            {
-                                data.timelines.map(timeline => (
-                                    <TimelineEvent
-                                        key={timeline.id}
-                                        color={timeline.orderTimelineType.color}
-                                        icon={Icons[timeline.orderTimelineType.icon]}
-                                        title={timeline.orderTimelineType.title}
-                                        subtitle={new Date(timeline.createdDate).toLocaleString()} />
-                                ))}
-
-                        </Timeline>
+                        <Scrollbar>
+                            <Box display={"inline-block"}>
+                                <Timeline minEvents={6} variant={"default"} placeholder>
+                                    {
+                                        data.timelines.map(timeline => (
+                                            <TimelineEvent
+                                                key={timeline.id}
+                                                color={timeline.orderTimelineType.color}
+                                                icon={Icons[timeline.orderTimelineType.icon]}
+                                                title={timeline.orderTimelineType.title}
+                                                subtitle={new Date(timeline.createdDate).toLocaleString()} />
+                                        ))}
+                                </Timeline>
+                            </Box>
+                        </Scrollbar>
                     </Box>
                 </Paper>
             }
@@ -66,106 +74,199 @@ export default function PurchaseDetail() {
                             THÔNG TIN ĐƠN HÀNG
                         </Typography>
                     </Box>
-                    <Stack spacing={3} pt={3} pl={3}>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Trạng Thái
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {data.orderStatus.description}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Mã Đơn Hàng
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {data.id}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Thời Gian Đặt
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {new Date(data.createDate).toLocaleString()}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Họ Và Tên
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {data.fullname}
-                                </Typography>
+
+                    <Grid pt={3} pl={3} container item xs={12}>
+                        <Grid container item xs={6}>
+                            <Grid item xs={12}>
+                                <Stack spacing={2} >
+                                    <Grid item container >
+                                        <Grid item container xs={4} alignItems={"center"}>
+                                            <Typography variant="subtitle1">
+                                                Trạng Thái
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Chip label={data.orderStatus.description} color={data.orderStatus.color} />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item container >
+                                        <Grid item container xs={4} alignItems={"center"}>
+                                            <Typography variant="subtitle1">
+                                                Loại
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Chip label={data.saleMethod.description} color={data.saleMethod.color} />
+                                        </Grid>
+                                    </Grid>
+                                    <Grid item container >
+                                        <Grid item container xs={4} alignItems={"center"}>
+                                            <Typography variant="subtitle1">
+                                                Mã Đơn Hàng
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="body1">
+                                                {data.id}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                </Stack>
                             </Grid>
                         </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Số Điện Thoại
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {data.phone}
-                                </Typography>
+                        <Grid item container xs={6}>
+                            <Grid item xs={12}>
+                                <Stack spacing={2}>
+                                    <Grid container item>
+                                        <Grid item container xs={4} alignItems={"center"}>
+                                            <Typography variant="subtitle1">
+                                                Họ Và Tên
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={8}>
+                                            <Typography variant="body1">
+                                                {data.fullname}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    {
+                                        data.phone &&
+                                        <Grid container item>
+                                            <Grid item container xs={4} alignItems={"center"}>
+                                                <Typography variant="subtitle1">
+                                                    Số Điện Thoại
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="body1">
+                                                    {data.phone}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    {
+                                        data.email &&
+                                        <Grid container item>
+                                            <Grid item container xs={4} alignItems={"center"}>
+                                                <Typography variant="subtitle1">
+                                                    Email
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="body1">
+                                                    {data.email}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    {
+                                        data.address &&
+                                        <Grid container >
+                                            <Grid item container xs={4} alignItems={"center"}>
+                                                <Typography variant="subtitle1">
+                                                    Địa Chỉ
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item xs={8}>
+                                                <Typography variant="body1">
+                                                    {`${data.detailedAddress}, ${data.address}`}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                </Stack>
                             </Grid>
                         </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Email
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {data.email}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                        <Grid container >
-                            <Grid item container xs={4} alignItems={"center"}>
-                                <Typography variant="body1">
-                                    Địa Chỉ
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={8}>
-                                <Typography variant="body1">
-                                    {`${data.detailedAddress}, ${data.address}`}
-                                </Typography>
-                            </Grid>
-                        </Grid>
-                    </Stack>
+                    </Grid>
                 </Box>
             </Paper>
 
             <Paper elevation={3} square>
                 <Box p={{ xs: 1, md: 3 }}>
+                    <Box borderBottom={1} borderColor={"grey.500"}>
+                        <Grid container justifyContent={"space-between"} pb={1} alignItems="center">
+                            <Typography variant="h5">
+                                LỊCH SỬ THANH TOÁN
+                            </Typography>
+                        </Grid>
+                    </Box>
+                    {
+                        data.transactions.length > 0 &&
+                        <Scrollbar>
+                            <TableContainer sx={{ minWidth: 800 }}>
+                                <Table>
+                                    <TableHead>
+                                        <TableRow>
+                                            <TableCell align="center">Số Tiền</TableCell>
+                                            <TableCell align="center">Thời Gian</TableCell>
+                                            <TableCell align="center">Loại Giao Dịch</TableCell>
+                                            <TableCell align="center">Phương Thức Thanh Toán</TableCell>
+                                            <TableCell align="center">Trạng Thái</TableCell>
+                                            <TableCell align="center">Nhân Viên Xác Nhận</TableCell>
+                                        </TableRow>
+                                    </TableHead>
+
+                                    <TableBody>
+                                        {
+                                            data.transactions.map(transaction => (
+                                                <TableRow hover tabIndex={-1} key={transaction.id}>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" flexWrap color={"crimson"}>
+                                                            {fCurrency(transaction.amount)}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" flexWrap>
+                                                            {new Date(transaction.createDate).toLocaleString()}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" flexWrap>
+                                                            <Chip label={transaction.transactionType.description} color={transaction.transactionType.color} />
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" flexWrap>
+                                                            <Chip label={transaction.paymentMethod.description} color={transaction.paymentMethod.color} />
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <Chip label={transaction.transactionStatus.description} color={transaction.transactionStatus.color} />
+                                                    </TableCell>
+                                                    <TableCell align="center">
+                                                        <Typography variant="body2" flexWrap>
+                                                            {transaction.staff}
+                                                        </Typography>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        }
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </Scrollbar>
+                    }
+                    {
+                        data.transactions.length === 0 &&
+                        <Typography variant="body1" pt={2} color={"dimgrey"}>
+                            Không Có Dữ Liệu
+                        </Typography>
+                    }
+                </Box>
+
+            </Paper>
+
+            <Paper elevation={3} square>
+                <Box p={{ xs: 1, md: 3 }}>
                     <Box>
-                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} idPurchase={data.id} userTokenQuery={data.token} />))}
+                        {data.items.map(item => (<OrderItem key={item.id} orderItem={item} isApproved={data.token == null && data.orderStatus.name === "APPROVED"} onSuccessRating={onSuccessRating} />))}
                     </Box>
                     <Grid container spacing={1} pt={3} justifyContent={"flex-end"}>
                         <Grid item md={4} xs={12}>
                             <Stack spacing={1}>
                                 <Grid item container >
                                     <Grid item container xs={6}>
-                                        <Typography variant="body1">
+                                        <Typography variant="body2" color={"dimgrey"}>
                                             Tiền Hàng
                                         </Typography>
                                     </Grid>
@@ -177,7 +278,7 @@ export default function PurchaseDetail() {
                                 </Grid>
                                 <Grid item container >
                                     <Grid item container xs={6}>
-                                        <Typography variant="body1">
+                                        <Typography variant="body2" color={"dimgrey"}>
                                             Phí vận chuyển
                                         </Typography>
                                     </Grid>
@@ -189,7 +290,7 @@ export default function PurchaseDetail() {
                                 </Grid>
                                 <Grid item container >
                                     <Grid item container xs={6}>
-                                        <Typography variant="body1">
+                                        <Typography variant="body2" color={"dimgrey"}>
                                             Giảm Giá
                                         </Typography>
                                     </Grid>
@@ -201,12 +302,12 @@ export default function PurchaseDetail() {
                                 </Grid>
                                 <Grid item container >
                                     <Grid item container xs={6}>
-                                        <Typography sx={{ fontWeight: 'bold' }} >
+                                        <Typography variant="subtitle2" >
                                             Tổng Số Tiền
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={6} container justifyContent={"flex-end"}>
-                                        <Typography sx={{ fontWeight: 'bold' }} color="error">
+                                        <Typography sx={{ fontWeight: 'bold' }} color="crimson">
                                             {fCurrency(data.total + data.fee - data.discount)}
                                         </Typography>
                                     </Grid>

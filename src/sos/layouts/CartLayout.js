@@ -1,4 +1,4 @@
-import { Box, Container, Grid, Paper, Stack } from '@mui/material';
+import { Box, Container, Grid, Paper, Stack, Typography } from '@mui/material';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Page from '../../components/Page';
@@ -21,10 +21,11 @@ export default function CartLayout() {
         <Page title="Giỏ Hàng">
             <Container disableGutters>
                 <Stack spacing={3} pt={3}>
-                    <Paper elevation={3} square>
-                        <Box px={2}>
-                            {
-                                cart.items && cart.items.length > 0 &&
+                    {
+                        cart.items && cart.items.length > 0 &&
+                        <Paper elevation={3} square>
+                            <Box px={2}>
+
                                 <>
                                     <Grid container spacing={1} py={2} sx={{ display: { xs: "none", md: "flex" } }} className={"border-bottom"}>
                                         <Grid item container lg={7} justifyContent="center" alignItems="center">
@@ -49,26 +50,42 @@ export default function CartLayout() {
                                         ))
                                     }
 
-                                    <div className="m-0 py-3 px-5 text-end">
-                                        Tổng số tiền : <span className="text-danger">{fCurrency(total(cart.items))}</span>
-                                    </div>
+                                    <Grid container py={2} justifyContent={"flex-end"}>
+                                        <Grid container item lg={3}>
+                                            <Grid item xs={6}>
+                                                Tổng số tiền :
+                                            </Grid>
+                                            <Grid item xs={6} pr={2}>
+                                                <Typography variant="body1" color="crimson" textAlign={"end"}>
+                                                    {fCurrency(total(cart.items))}
+                                                </Typography>
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
                                 </>
-                            }
-                            {
-                                (cart.items == null || cart.items.length === 0) &&
-                                <div className="m-0 py-3 px-5 text-end">
-                                    Chưa có mặt hàng nào trong giỏ
-                                </div>
-                            }
-                        </Box>
-                    </Paper>
-                    <Paper elevation={3} square>
-                        <Box p={2}>
-                            {cart.id &&
+                            </Box>
+                        </Paper>
+                    }
+
+                    {
+                        (cart.items == null || cart.items.length === 0) &&
+                        <Grid container justifyContent={"center"} p={3}>
+                            <Stack spacing={3}>
+                                <img src='https://bizweb.dktcdn.net/100/377/398/themes/755909/assets/empty_cart.png?1669026383948' alt='cart empty' />
+                                <Typography variant='body1' color={"dimgray"} align='center'>
+                                    Không có sản phẩm nào trong giỏ hàng của bạn
+                                </Typography>
+                            </Stack>
+                        </Grid>
+                    }
+
+                    {cart.items != null && cart.items.length !== 0 &&
+                        <Paper elevation={3} square>
+                            <Box p={2}>
                                 <CartOrderForm id={cart.id} total={total(cart.items)} token={cart.token} />
-                            }
-                        </Box>
-                    </Paper>
+                            </Box>
+                        </Paper>
+                    }
                 </Stack>
             </Container>
         </Page>

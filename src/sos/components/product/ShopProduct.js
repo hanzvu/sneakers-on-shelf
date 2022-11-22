@@ -31,44 +31,20 @@ export default function ShopProduct({ product }) {
     return (
         <Card className='h-100'>
             <Box sx={{ pt: '100%', position: 'relative' }}>
-                {/* {originalPrice > sellPrice && (
-                        <Label
-                            variant="filled"
-                            color={'error'}
-                            sx={{
-                                zIndex: 9,
-                                top: 16,
-                                right: 16,
-                                position: 'absolute',
-                                textTransform: 'uppercase',
-                            }}>
-                            Sale - {parseInt((100 * sellPrice) / originalPrice, 10)} %
-                        </Label>
-                    )} */}
                 <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
                     <ProductImgStyle alt={name} src={image} />
                 </Link>
             </Box>
 
-            <Stack spacing={2} sx={{ p: 2 }}>
+            <Stack spacing={2} sx={{ p: 2, minHeight: '120px' }} direction="column" justifyContent="space-between">
                 <Link to={`/products/${id}`} color="inherit" underline="hover" component={RouterLink}>
-                    <Typography variant="subtitle1">
+                    <Typography variant="subtitle1" >
                         {name}
                     </Typography>
                 </Link>
 
                 <Stack direction="row" alignItems="center" justifyContent="flex-end">
                     <Typography variant="subtitle1" className='text-danger'>
-                        {/* <Typography
-                                component="span"
-                                variant="body1"
-                                sx={{
-                                    color: 'text.disabled',
-                                    textDecoration: 'line-through',
-                                }}
-                            >
-                                {originalPrice && fCurrency(originalPrice)}
-                            </Typography> */}
                         {fCurrency(sellPrice)}
                     </Typography>
                 </Stack>

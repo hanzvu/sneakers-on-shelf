@@ -23,11 +23,11 @@ export default function ProductDetailLayout() {
     return (<>
         <Page title={product ? product.name : null}>
             <Container>
-                <Grid container>
+                <Grid container pt={3}>
                     {product &&
                         <>
                             <ProductDetail product={product} />
-                            <ProductDetailDescription />
+                            <ProductDetailDescription productId={product.id} score={product.score} description={product.description} />
                         </>
                     }
                 </Grid>

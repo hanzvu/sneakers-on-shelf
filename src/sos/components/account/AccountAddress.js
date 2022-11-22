@@ -59,7 +59,15 @@ export default function AccountAddress() {
         try {
             await createAddress(customerInfo);
             fetchAccount();
-            setAddressFormInput();
+            setAddressFormInput({
+                province: null,
+                district: null,
+                ward: null,
+                fullname: '',
+                phone: '',
+                address: '',
+                email: ''
+            });
         } catch (error) {
             if (error.response != null && error.response.status === 400) {
                 showSnackbar(error.response.data, "error");

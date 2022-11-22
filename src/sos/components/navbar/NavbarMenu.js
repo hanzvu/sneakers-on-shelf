@@ -22,7 +22,7 @@ export default function NavbarMenu() {
                             </Link>
                         </li>
                         <li className="nav-item">
-                            <Link className='nav-link text-light' to={'/products'} component={RouterLink}>
+                            <Link className='nav-link text-light' to={'/products?sort=best_selling'} component={RouterLink}>
                                 HÀNG BÁN CHẠY
                             </Link>
                         </li>

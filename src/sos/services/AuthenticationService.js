@@ -20,6 +20,10 @@ export const addAuthenticationInterceptor = () => {
     const interceptor = axios.interceptors.response.use(
         response => response,
         async error => {
+            if (error.code === 'ERR_NETWORK') {
+                return Promise.reject(error);
+            }
+            
             axios.interceptors.response.eject(interceptor);
             const auth = getAuthenticatedUser();
             if (error.response && (error.response.status === 403 || error.response.status === 401) && auth != null) {
@@ -40,6 +44,11 @@ export const addAuthenticationInterceptor = () => {
 
 export const login = async (account) => {
     const response = await axios.post(`${BASE_API}/api/v1/tokens/signin`, account);
+    setAuthentication(response.data);
+}
+
+export const register = async (account) => {
+    const response = await axios.post(`${BASE_API}/api/v1/accounts`, account);
     setAuthentication(response.data);
 }
 

@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { Container, Stack } from '@mui/material';
+import { Box, Container, Grid } from '@mui/material';
 // components
 import Page from '../../components/Page';
 import ProductCollection from '../components/collection/ProductCollection';
-import ProductCollectionFilterSidebar from '../components/collection/ProductCollectionFilterSidebar';
+import CollectionSidebar from '../components/collection/CollectionSidebar';
 // mock
 
 
@@ -11,20 +10,17 @@ import ProductCollectionFilterSidebar from '../components/collection/ProductColl
 
 export default function ProductCollectionLayout() {
 
-    const [openFilter, setOpenFilter] = useState(false);
-
     return (
         <Page title="Giày Chính Hàng Sneakers On Shelf">
             <Container>
-                <Stack direction="row" flexWrap="wrap-reverse" alignItems="center" justifyContent="flex-end" sx={{ mb: 5 }}>
-                    <Stack direction="row" spacing={1} flexShrink={0} sx={{ my: 1 }}>
-                        <ProductCollectionFilterSidebar
-                            isOpenFilter={openFilter}
-                            onOpenFilter={() => setOpenFilter(true)}
-                            onCloseFilter={() => setOpenFilter(false)} />
-                    </Stack>
-                </Stack>
-                <ProductCollection />
+                <Box pt={3}>
+                    <Grid container spacing={1}>
+                        <Grid item md={3} sx={{ display: { md: 'block', sm: 'none' } }}>
+                            <CollectionSidebar />
+                        </Grid>
+                        <ProductCollection />
+                    </Grid>
+                </Box>
             </Container>
         </Page>
     );

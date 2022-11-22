@@ -11,15 +11,16 @@ import HomeLayout from './sos/layouts';
 import CartLayout from './sos/layouts/CartLayout';
 import ProductCollectionLayout from './sos/layouts/ProductCollectionLayout';
 import ProductDetailLayout from './sos/layouts/ProductDetailLayout';
-import PurchaseLayout from './sos/layouts/PurchaseLayout';
 import PurchaseDetailLayout from './sos/layouts/PurchaseDetailLayout';
 import LoginLayout from './sos/layouts/LoginLayout';
+import RegisterLayout from './sos/layouts/RegisterLayout';
 import AccountLayout from './sos/layouts/AccountLayout';
 import AccountProfileInfo from './sos/components/account/AccountProfileInfo';
 import AccountAddress from './sos/components/account/AccountAddress';
-import AccountChangePassword from './sos/components/account/AccountChangePassword';
 import AccountPurchase from './sos/components/account/AccountPurchase';
 import OAuthRedirected from './sos/components/login/OAuthRedirected';
+import DefaultLayout from './sos/layouts/DefaultLayout';
+import AccountPassword from './sos/components/account/AccountPassword';
 
 // ----------------------------------------------------------------------
 
@@ -47,8 +48,9 @@ export default function Router() {
         {
           path: '',
           children: [
-            { path: '', element: <Navigate to="/products" /> },
+            { path: '', element: <DefaultLayout /> },
             { path: 'login', element: <LoginLayout /> },
+            { path: 'register', element: <RegisterLayout /> },
           ],
         },
         {
@@ -62,7 +64,6 @@ export default function Router() {
         {
           path: 'purchase',
           children: [
-            { path: '', element: <PurchaseLayout /> },
             { path: ':id', element: <PurchaseDetailLayout /> }
           ],
         },
@@ -73,7 +74,7 @@ export default function Router() {
             { path: '', element: <AccountProfileInfo /> },
             { path: 'purchase', element: <AccountPurchase /> },
             { path: 'address', element: <AccountAddress /> },
-            { path: 'change-password', element: <AccountChangePassword /> },
+            { path: 'change-password', element: <AccountPassword /> },
           ]
         },
         { path: '/404', element: <NotFound /> },

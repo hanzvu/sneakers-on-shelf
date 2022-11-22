@@ -58,7 +58,6 @@ export default function LoginForm() {
                 showSnackbar("Có lỗi xảy ra, hãy thử lại sau.", "error")
             }
         }
-
     };
 
     return (

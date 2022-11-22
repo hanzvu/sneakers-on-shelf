@@ -12,6 +12,17 @@ export const fetchAccount = async () => {
     }
 }
 
+export const updateAccountInfo = async (id, data) => {
+    const response = await axios.put(`${BASE_API}/api/v1/accounts/${id}/info`, data);
+    return response;
+}
+
+export const updateAccountPassword = async (id, data) => {
+    const response = await axios.put(`${BASE_API}/api/v1/accounts/${id}/password`, data);
+    return response;
+}
+
+
 export const getAddresses = async (id) => {
     const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/customer-infos`);
     return response.data;

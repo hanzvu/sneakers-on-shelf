@@ -16,7 +16,7 @@ export const getPurchase = async (id) => {
     return response.data;
 }
 
-export const getPurchaseByAccountId = async (id) => {
-    const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/purchases`);
+export const getPurchaseByAccountId = async (id, params) => {
+    const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/purchases`, { params });
     return response.data;
 }
