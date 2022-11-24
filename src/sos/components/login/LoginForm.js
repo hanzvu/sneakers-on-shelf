@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -83,7 +83,7 @@ export default function LoginForm() {
 
             <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
                 <RHFCheckbox name="remember" label="Ghi nhớ đăng nhập" />
-                <Link variant="subtitle2" underline="hover">
+                <Link variant="subtitle2" underline="hover" component={RouterLink} to="/forgot-password">
                     Quên mật khẩu ?
                 </Link>
             </Stack>

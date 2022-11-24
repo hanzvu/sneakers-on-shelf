@@ -21,6 +21,7 @@ import AccountPurchase from './sos/components/account/AccountPurchase';
 import OAuthRedirected from './sos/components/login/OAuthRedirected';
 import DefaultLayout from './sos/layouts/DefaultLayout';
 import AccountPassword from './sos/components/account/AccountPassword';
+import ForgotPasswordLayout from './sos/layouts/ForgotPasswordLayout';
 
 // ----------------------------------------------------------------------
 
@@ -51,6 +52,7 @@ export default function Router() {
             { path: '', element: <DefaultLayout /> },
             { path: 'login', element: <LoginLayout /> },
             { path: 'register', element: <RegisterLayout /> },
+            { path: 'forgot-password', element: <ForgotPasswordLayout /> },
           ],
         },
         {

@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
+import MessengerCustomerChat from "react-messenger-customer-chat/lib/MessengerCustomerChat";
 import { Outlet } from "react-router-dom";
 import NotifyModal from "../components/common/Modal";
 import MySnackbar from "../components/common/MySnackbar";
@@ -40,6 +41,10 @@ export default function HomeLayout() {
             <Footer />
             <NotifyModal />
             <MySnackbar />
+            <MessengerCustomerChat
+                pageId="104561945824804"
+                appId="863335941768634" 
+                />
         </>
     );
 }

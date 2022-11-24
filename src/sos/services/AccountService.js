@@ -22,6 +22,11 @@ export const updateAccountPassword = async (id, data) => {
     return response;
 }
 
+export const forgotPassword = async (data) => {
+    const response = await axios.put(`${BASE_API}/api/v1/accounts/reset-password`, data);
+    return response;
+}
+
 
 export const getAddresses = async (id) => {
     const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/customer-infos`);
