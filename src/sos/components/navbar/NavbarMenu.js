@@ -29,7 +29,7 @@ export default function NavbarMenu() {
                         <li className="nav-item dropdown"><a className="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> TÙY CHỌN </a>
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li className='dropdown-item'>
-                                    <Link className='nav-link text-dark' to={'/dashboard'} component={RouterLink}>
+                                    <Link className='nav-link text-dark' to={'/products'} component={RouterLink}>
                                         Dành cho người bán
                                     </Link>
                                 </li>
