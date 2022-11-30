@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import { Grid, styled } from "@mui/material";
+import { Card, Grid, styled } from "@mui/material";
 import { Box } from "@mui/system";
+import { Carousel } from "react-bootstrap";
 
 const ProductImgStyle = styled('img')({
     top: 0,
@@ -20,19 +21,15 @@ export default function ProductImageContainer({ name, productImage, productImage
     };
 
     return (<>
-        <Grid item xs={12}>
-            <Box sx={{ pt: '100%', position: 'relative' }}>
-                <ProductImgStyle alt={name} src={image} />
-            </Box>
-        </Grid>
-        <Grid container item spacing={0} xs={12}>
-            {productImages.map((img, index) => (
-                <Grid key={index} item xs={3} sm={6} md={3}>
-                    <Box sx={{ pt: '100%', position: 'relative' }} borderColor={'grey.500'}>
-                        <ProductImgStyle alt={index} src={img} onClick={() => productImagesOnClick(index)} />
-                    </Box>
-                </Grid>
-            ))}
-        </Grid>
+        <Card sx={{maxHeight:555}}>
+            <Carousel className="carousel-dark">
+                    {productImages.map((img, index) => (
+                        <Carousel.Item key={index} interval={3000}>
+                            <img className="img-fluid" src={img} alt={name} />
+                        </Carousel.Item>                    
+                    ))}
+            </Carousel>
+        </Card>
+        <></>   
     </>)
 }
