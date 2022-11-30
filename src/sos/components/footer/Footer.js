@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Link } from '@mui/material';
+import { Avatar, Box, Button, Link, SpeedDial, SpeedDialIcon } from '@mui/material';
 
 export default function Footer() {
     return (
@@ -14,8 +14,8 @@ export default function Footer() {
                                 <h4 className="mb-4">SOS-Shop</h4>
                                 <div className="">
                                     <p className="mb-1"><strong>Địa chỉ : </strong>Số 1 Nguyễn Trãi, Thanh Xuân, Hà Nội</p>
-                                    <p className="mb-1"><strong>Số điện thoại : </strong> 084 448 8888</p>
-                                    <p><strong>Email hỗ trợ: </strong> sneakersonshelf@gmail.com</p>
+                                    <p className="mb-1"><strong>Số điện thoại : </strong><a className="text-decoration-none text-dark" href="tel:0843442263">0844.488.888</a></p>
+                                    <p><strong>Email hỗ trợ: </strong> <a className="text-decoration-none text-dark" href="mailto:sneakersonshelf@gmail.com">sneakersonshelf@gmail.com</a></p>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@ export default function Footer() {
                                     <li className="d-lg-flex justify-content-between">Chủ Nhật <span>12.00-23.59</span></li>
                                 </ul>
 
-                                <h5>Call Now : 084 448 8888</h5>
+                                <h5><a className="text-decoration-none text-dark" href="tel:0843442263">Call Now : 0844.488.888</a></h5>
                             </div>
                         </div>
                     </div>
@@ -89,14 +89,6 @@ export default function Footer() {
                         <div className="col-lg-12">
                             <p className="copyright mb-0 ">@ Copyright Reserved to SOS &amp; made by <a className="text-decoration-none text-dark" href="#">Sneaker On Shelf</a></p>
                         </div>
-                        {/* <div className="col-lg-6 d-lg-flex justify-content-between">
-                            <ul className="list-inline mb-0 footer-btm-links text-lg-right mt-2 mt-lg-0">
-                            <li className="list-inline-item"><a className="text-decoration-none text-dark" href="#">Privacy Policy</a></li>
-                            <li className="list-inline-item"><a className="text-decoration-none text-dark" href="#">Terms &amp; Conditions</a></li>
-                            <li className="list-inline-item"><a className="text-decoration-none text-dark" href="#">Cookie Policy</a></li>
-                            <li className="list-inline-item"><a className="text-decoration-none text-dark" href="#">Terms of Sale</a></li>
-                            </ul>
-                        </div> */}
                     </div>
                 </div>
             </div>
