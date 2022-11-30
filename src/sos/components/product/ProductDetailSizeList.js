@@ -1,6 +1,8 @@
-import { Grid, Stack, Typography } from "@mui/material";
+import { Button, Grid, Input, Stack, TextField, Typography } from "@mui/material";
+import { color } from "@mui/system";
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import Iconify from "../../../components/Iconify";
 import { addToCart } from "../../services/CartService";
 import Incrementer from "./Incrementer";
 
@@ -32,43 +34,55 @@ export default function ProductDetailSizeList({ productDetails }) {
     );
 
     return (<>
-        <div className="py-1 text-center">Size</div>
-        <Grid container spacing={1} justifyContent={"center"}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
+            <div className="py-1">Size :</div>
+            <Button variant="text" color="inherit" startIcon={<Iconify icon="eva:search-fill" />}>
+                Tìm kích cỡ phù hợp nhất với bạn
+            </Button>
+        </Stack>
+        <Grid container spacing={1} justifyContent={"start"}>
             {
                 productDetails.map((pd, i) => (
                     <Grid item key={pd.id} gridAutoColumns>
                         <button
-                            className={`d-block shadow-none btn rounded-0 ${pd.id === selectedProduct.id ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => setSelectedProduct(productDetails[i])}>
+                            className={`d-block shadow-none btn rounded-3 ${pd.id === selectedProduct.id ? 'btn-dark' : 'btn-outline-dark'}`} onClick={() => setSelectedProduct(productDetails[i])}>
                             {pd.size}
                         </button>
                     </Grid>
                 ))
             }
         </Grid>
-        <Stack pt={2} alignItems="center" justifyContent="space-between">
-            <Incrementer
-                name="quantity"
-                quantity={quantity}
-                available={selectedProduct.quantity}
-                onChangeQuantity={event => handleChangeQuantity(event.target.value)}
-                onIncrementQuantity={() => handleChangeQuantity(quantity + 1)}
-                onDecrementQuantity={() => handleChangeQuantity(quantity - 1)} />
-            <Typography variant="caption" component="div" sx={{ mt: 1, textAlign: 'right', color: 'text.secondary' }}>
-                {selectedProduct.quantity} sản phẩm có sẵn
-            </Typography>
-        </Stack>
-        <div className="d-flex justify-content-center py-3">
-            {
-                selectedProduct.quantity > 0 &&
-                <Stack direction="row" spacing={1}>
-                    <button type="submit" className="btn btn-dark shadow-none rounded-0 border-dark" onClick={handleAddToCartSubmit}>
+        <Typography variant="body2" component="div" sx={{ mt: 2, textAlign: 'left', color: 'text.secondary' }}>
+            {selectedProduct.quantity} sản phẩm có sẵn
+        </Typography>
+        <Grid container pt={2} spacing={2}>
+            <Grid item xs={4}>
+                <Incrementer
+                    name="quantity"
+                    quantity={quantity}
+                    available={selectedProduct.quantity}
+                    onChangeQuantity={event => handleChangeQuantity(event.target.value)}
+                    onIncrementQuantity={() => handleChangeQuantity(quantity + 1)}
+                    onDecrementQuantity={() => handleChangeQuantity(quantity - 1)} />
+            </Grid>
+            <Grid item xs={8}>
+                {
+                    selectedProduct.quantity > 0 &&
+                    <Button variant="outlined" color="inherit" size="large" type="submit" onClick={handleAddToCartSubmit} fullWidth>
                         THÊM VÀO GIỎ
-                    </button>
-                    <button type="submit" className="btn btn-dark shadow-none rounded-0 border-dark" onClick={handleBuyNowSubmit}>
+                    </Button>
+                }
+            </Grid>
+            <Grid item xs={12}>
+                {
+                    selectedProduct.quantity > 0 &&
+                    <Button variant="contained" className="btn btn-dark" size="large" type="submit" onClick={handleBuyNowSubmit} fullWidth>
                         MUA NGAY
-                    </button>
-                </Stack>
-            }
-        </div>
+                    </Button>
+
+                }
+            </Grid>
+
+        </Grid>
     </>)
 }
