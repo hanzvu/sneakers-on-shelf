@@ -6,6 +6,8 @@ import ProductImageContainer from "./ProductImageContainer";
 
 export default function ProductDetail({ product }) {
 
+    console.log(product);
+
     const { name, productImage, productImages, brand, category, productGender, sellPrice, productDetails, description } = product;
 
     return (<>
@@ -50,7 +52,7 @@ export default function ProductDetail({ product }) {
                         </Grid>
                         <Grid item xs={9}>
                             <Typography variant='subtitle1'>
-                                {productGender}
+                                {productGender.description}
                             </Typography>
                         </Grid>
                     </Grid>

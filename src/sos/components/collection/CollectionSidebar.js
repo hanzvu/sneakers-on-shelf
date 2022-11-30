@@ -88,7 +88,7 @@ export default function CollectionSidebar() {
                             {
                                 data.productGenders &&
                                 data.productGenders.map(gender => (
-                                    <FormControlLabel key={gender} value={gender} control={<Radio size="small" color='default' />} label={gender} />
+                                    <FormControlLabel key={gender.name} value={gender.name} control={<Radio size="small" color='default' />} label={gender.description} />
                                 ))
                             }
                         </RadioGroup>
