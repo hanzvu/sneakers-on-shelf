@@ -20,3 +20,18 @@ export const getPurchaseByAccountId = async (id, params) => {
     const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/purchases`, { params });
     return response.data;
 }
+
+export const getAnonymousPayUrl = async (id, token) => {
+    const instance = axios.create({
+        method: 'get',
+        baseURL: `${BASE_API}/api/v1/purchases/${id}/pay-url`,
+    });
+    instance.defaults.headers.token = token;
+    const response = await instance.request();
+    return response.data;
+}
+
+export const getPayUrl = async (id) => {
+    const response = await axios.get(`${BASE_API}/api/v1/purchases/${id}/pay-url`);
+    return response.data;
+}

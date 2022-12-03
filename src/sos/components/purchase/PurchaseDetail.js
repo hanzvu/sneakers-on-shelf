@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Box, CardMedia, Chip, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Chip, Grid, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { Timeline, TimelineEvent } from '@mailtop/horizontal-timeline'
 import * as Icons from "react-icons/fa";
 import Scrollbar from "../../../components/Scrollbar";
 import { fCurrency } from "../../../utils/formatNumber";
-import { getAnonymousPurchase, getPurchase } from "../../services/PurchaseService";
+import { getAnonymousPayUrl, getAnonymousPurchase, getPayUrl, getPurchase } from "../../services/PurchaseService";
 import OrderItem from "./OrderItem";
+import PaymentQRCodeDialog from "./PaymentQRCodeDialog";
+import { showSnackbar } from "../../services/NotificationService";
 
 export default function PurchaseDetail() {
 
@@ -29,13 +31,29 @@ export default function PurchaseDetail() {
                 setData(data)
             })
         }
-        searchParams.delete("token")
     }, [params])
 
     const onSuccessRating = () => {
         getPurchase(params.id).then(data => {
             setData(data)
         });
+    }
+
+    const handlePaymentWithMomo = () => {
+        if (searchParams.get("token")) {
+            getAnonymousPayUrl(params.id, searchParams.get("token")).then(data => {
+                window.location.replace(data)
+            }).catch((error) => {
+                console.log(error);
+                showSnackbar('Hệ thống đang bận, hãy thử lại sau.', 'error')
+            })
+        } else {
+            getPayUrl(params.id).then(data => {
+                window.location.replace(data);
+            }).catch(() => {
+                showSnackbar('Hệ thống đang bận, hãy thử lại sau.', 'error')
+            })
+        }
     }
 
     if (data == null) {
@@ -185,9 +203,22 @@ export default function PurchaseDetail() {
                 <Box p={{ xs: 1, md: 3 }}>
                     <Box borderBottom={1} borderColor={"grey.500"}>
                         <Grid container justifyContent={"space-between"} pb={1} alignItems="center">
-                            <Typography variant="h5">
-                                LỊCH SỬ THANH TOÁN
-                            </Typography>
+                            <Grid item xs={7}>
+                                <Typography variant="h5">
+                                    LỊCH SỬ THANH TOÁN
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={5} container justifyContent={"flex-end"}>
+                                <Stack spacing={2} direction={"row"}>
+                                    <Button variant="contained" color="secondary" size="medium" onClick={handlePaymentWithMomo}>
+                                        Thanh Toán Bằng Momo
+                                    </Button>
+                                    {
+                                        data.paymentQRCode &&
+                                        <PaymentQRCodeDialog paymentQRCode={data.paymentQRCode} />
+                                    }
+                                </Stack>
+                            </Grid>
                         </Grid>
                     </Box>
                     {
@@ -317,19 +348,6 @@ export default function PurchaseDetail() {
                     </Grid>
                 </Box>
             </Paper>
-
-            {
-                data.paymentQRCode &&
-                <Paper elevation={3} square>
-                    <Box p={{ xs: 1, md: 3 }}>
-                        <Grid container justifyContent={"center"}>
-                            <Grid item md={5} xs={12}>
-                                <CardMedia component="img" image={data.paymentQRCode} alt="green iguana" />
-                            </Grid>
-                        </Grid>
-                    </Box>
-                </Paper>
-            }
         </Stack>
 
     </>)
