@@ -143,4 +143,9 @@ const removeCartFromLocalStorage = () => {
     window.localStorage.removeItem('cart');
 }
 
+export const getMemberOfferPolicyByAccountId = async (id) => {
+    const response = await axios.get(`${BASE_API}/api/v1/accounts/${id}/member-offer-policy`);
+    return response.data;
+}
+
 export { submitCart, addToCart, setCartItemQuantity, removeFromCart, fetchCart, clearCart, getCartFromLocalStorage }

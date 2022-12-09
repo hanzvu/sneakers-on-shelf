@@ -331,6 +331,36 @@ export default function PurchaseDetail() {
                                         </Typography>
                                     </Grid>
                                 </Grid>
+                                {
+                                    data.memberOffer > 0 &&
+                                    <Grid item container >
+                                        <Grid item container xs={6}>
+                                            <Typography variant="body2" color={"dimgrey"}>
+                                                Quyền lợi thành viên
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6} container justifyContent={"flex-end"}>
+                                            <Typography variant="body1">
+                                                {fCurrency(data.memberOffer)}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                }
+                                {
+                                    data.refund > 0 &&
+                                    <Grid item container >
+                                        <Grid item container xs={6}>
+                                            <Typography variant="body2" color={"dimgrey"}>
+                                                Trả hàng
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={6} container justifyContent={"flex-end"}>
+                                            <Typography variant="body1">
+                                                {fCurrency(data.refund)}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                }
                                 <Grid item container >
                                     <Grid item container xs={6}>
                                         <Typography variant="subtitle2" >
@@ -339,7 +369,7 @@ export default function PurchaseDetail() {
                                     </Grid>
                                     <Grid item xs={6} container justifyContent={"flex-end"}>
                                         <Typography sx={{ fontWeight: 'bold' }} color="crimson">
-                                            {fCurrency(data.total + data.fee - data.discount)}
+                                            {fCurrency(data.total + data.fee - data.discount - data.memberOffer - data.refund)}
                                         </Typography>
                                     </Grid>
                                 </Grid>

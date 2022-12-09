@@ -5,8 +5,12 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, styled } from '@mui/material';
-import { getAllBrand, getAllCategory, getAllProductGender } from "../../services/CollectionService";
+import SquareIcon from '@mui/icons-material/Square';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Stack, styled } from '@mui/material';
+import { getAllBrand, getAllCategory, getAllColor, getAllMaterial, getAllProductGender, getAllSole } from "../../services/CollectionService";
 
 export default function CollectionSidebar() {
 
@@ -21,11 +25,45 @@ export default function CollectionSidebar() {
         const fetchData = async () => {
             const brands = await getAllBrand();
             const categories = await getAllCategory();
-            const productGenders = await getAllProductGender();
-            setData({ brands, categories, productGenders });
+            const colors = await getAllColor();
+            const soles = await getAllSole();
+            const materials = await getAllMaterial();
+            setData({ brands, categories, colors, soles, materials, productGenders: PRODUCT_GENDER, shoeHeights: SHOE_HEIGHT, benefits: BENEFIT, shoeFeels: SHOE_FEEL, surfaces: SURFACE });
         }
         fetchData();
     }, [])
+
+    const checkParamInclude = (key, value) => {
+        const colorsParam = searchParams.get(key);
+        return colorsParam != null && colorsParam.split(',').includes(value);
+    }
+
+    const handleCheckParam = (key, value) => {
+        const colorsParam = searchParams.get(key);
+        if (colorsParam != null) {
+            const colors = colorsParam.split(',');
+
+            const index = colors.indexOf('');
+            if (index !== -1) {
+                colors.splice(index, 1);
+            }
+
+            if (colors.includes(value)) {
+                colors.splice(colors.indexOf(value), 1);
+            } else {
+                colors.push(value);
+            }
+            setSearchParams({
+                ...Object.fromEntries(searchParams.entries()),
+                [key]: colors.join()
+            })
+        } else {
+            setSearchParams({
+                ...Object.fromEntries(searchParams.entries()),
+                [key]: value
+            });
+        }
+    }
 
     return (
         <div>
@@ -35,19 +73,15 @@ export default function CollectionSidebar() {
                 </AccordionSummary>
                 <AccordionDetails>
                     <FormControl>
-                        <RadioGroup value={searchParams.get('brand')} onChange={(e) => {
-                            setSearchParams({
-                                ...Object.fromEntries(searchParams.entries()),
-                                brand: e.target.value
-                            })
-                        }}>
-                            {
-                                data.brands &&
-                                data.brands.map(brand => (
-                                    <FormControlLabel key={brand.id} value={brand.id} control={<Radio size="small" color='default' />} label={brand.name} />
-                                ))
-                            }
-                        </RadioGroup>
+                        {
+                            data.brands &&
+                            data.brands.map(entity => (
+                                <FormControlLabel key={entity.id} label={entity.name}
+                                    control={<Checkbox checked={checkParamInclude('brand', entity.id.toString())} onChange={() => { handleCheckParam('brand', entity.id.toString()) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
                     </FormControl>
                 </AccordionDetails>
             </Accordion>
@@ -57,19 +91,15 @@ export default function CollectionSidebar() {
                 </AccordionSummary>
                 <AccordionDetails>
                     <FormControl>
-                        <RadioGroup value={searchParams.get('category')} onChange={(e) => {
-                            setSearchParams({
-                                ...Object.fromEntries(searchParams.entries()),
-                                category: e.target.value
-                            })
-                        }}>
-                            {
-                                data.categories &&
-                                data.categories.map(category => (
-                                    <FormControlLabel key={category.id} value={category.id} control={<Radio size="small" color='default' />} label={category.name} />
-                                ))
-                            }
-                        </RadioGroup>
+                        {
+                            data.categories &&
+                            data.categories.map(entity => (
+                                <FormControlLabel key={entity.id} label={entity.name}
+                                    control={<Checkbox checked={checkParamInclude('category', entity.id.toString())} onChange={() => { handleCheckParam('category', entity.id.toString()) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
                     </FormControl>
                 </AccordionDetails>
             </Accordion>
@@ -79,23 +109,146 @@ export default function CollectionSidebar() {
                 </AccordionSummary>
                 <AccordionDetails>
                     <FormControl>
-                        <RadioGroup value={searchParams.get('gender')} onChange={(e) => {
-                            setSearchParams({
-                                ...Object.fromEntries(searchParams.entries()),
-                                gender: e.target.value
-                            })
-                        }}>
-                            {
-                                data.productGenders &&
-                                data.productGenders.map(gender => (
-                                    <FormControlLabel key={gender.name} value={gender.name} control={<Radio size="small" color='default' />} label={gender.description} />
-                                ))
-                            }
-                        </RadioGroup>
+                        {
+                            data.productGenders &&
+                            data.productGenders.map(entity => (
+                                <FormControlLabel key={entity.name} label={entity.description}
+                                    control={<Checkbox checked={checkParamInclude('gender', entity.name)} onChange={() => { handleCheckParam('gender', entity.name) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
                     </FormControl>
                 </AccordionDetails>
             </Accordion>
-
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>MÀU SẮC</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        <Grid container>
+                            {
+                                data.colors && data.colors.map(entity => (
+                                    <Grid item xs={2} key={entity.id}>
+                                        <FormControlLabel
+                                            control={<Checkbox checked={checkParamInclude('color', entity.id.toString())} onChange={() => { handleCheckParam('color', entity.id.toString()) }} icon={<SquareIcon style={{ fill: entity.code }} />}
+                                                checkedIcon={<CheckBoxIcon style={{ fill: entity.code }} />} />} />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>ĐẾ GIÀY</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.soles &&
+                            data.soles.map(entity => (
+                                <FormControlLabel key={entity.id} label={entity.name}
+                                    control={<Checkbox checked={checkParamInclude('sole', entity.id.toString())} onChange={() => { handleCheckParam('sole', entity.id.toString()) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>CHẤT LIỆU</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.materials &&
+                            data.materials.map(entity => (
+                                <FormControlLabel key={entity.id} label={entity.name}
+                                    control={<Checkbox checked={checkParamInclude('material', entity.id.toString())} onChange={() => { handleCheckParam('material', entity.id.toString()) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>CHIỀU CAO</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.shoeHeights &&
+                            data.shoeHeights.map(entity => (
+                                <FormControlLabel key={entity.name} label={entity.description}
+                                    control={< Checkbox checked={checkParamInclude('height', entity.name)} onChange={() => { handleCheckParam('height', entity.name) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>CẢM GIÁC</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.shoeFeels &&
+                            data.shoeFeels.map(entity => (
+                                <FormControlLabel key={entity.name} label={entity.description}
+                                    control={< Checkbox checked={checkParamInclude('feel', entity.name)} onChange={() => { handleCheckParam('feel', entity.name) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>BỀ MẶT</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.surfaces &&
+                            data.surfaces.map(entity => (
+                                <FormControlLabel key={entity.name} label={entity.description}
+                                    control={< Checkbox checked={checkParamInclude('surface', entity.name)} onChange={() => { handleCheckParam('surface', entity.name) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>THỜI TIẾT THÍCH HỢP</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        {
+                            data.benefits &&
+                            data.benefits.map(entity => (
+                                <FormControlLabel key={entity.name} label={entity.description}
+                                    control={< Checkbox checked={checkParamInclude('benefit', entity.name)} onChange={() => { handleCheckParam('benefit', entity.name) }}
+                                        icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                        checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                            ))
+                        }
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
             {
                 !searchParams.entries().next().done &&
                 <Stack direction="row" justifyContent="center">
@@ -151,3 +304,39 @@ const BpCheckedIcon = styled(BpIcon)({
         backgroundColor: '#106ba3',
     },
 });
+
+const PRODUCT_GENDER = [
+    { name: 'MEN', description: 'Nam' },
+    { name: 'WOMAN', description: 'Nữ' },
+    { name: 'UNISEX', description: 'Unisex' },
+]
+
+const SHOE_HEIGHT = [
+    { name: 'LOW_TOP', description: 'Cổ Thấp' },
+    { name: 'MID_TOP', description: 'Cổ Vừa' },
+    { name: 'HIGH_TOP', description: 'Cổ Cao' }
+]
+
+const BENEFIT = [
+    { name: 'NEUTRAL', description: 'Bình thường' },
+    { name: 'WARM', description: 'Thời tiết ấm áp' },
+    { name: 'COLD', description: 'Thời tiết lạnh' },
+    { name: 'HUMID', description: 'Thời tiết ẩm ướt' },
+]
+
+const SHOE_FEEL = [
+    { name: 'NEUTRAL', description: 'Ổn định' },
+    { name: 'FLEXIBLE', description: 'Thoải mái linh hoạt' },
+    { name: 'SRPINGY', description: 'Co dãn đàn hồi' },
+    { name: 'SOFT', description: 'Mềm mại' },
+]
+
+const SURFACE = [
+    { name: 'NEUTRAL', description: 'Bình thường' },
+    { name: 'FIRM', description: 'Kiên cố' },
+    { name: 'HARD_COURT', description: 'Sân cứng' },
+    { name: 'INDOOR_COURT', description: 'Sân đấu trong nhà' },
+    { name: 'ROAD', description: 'Đường' },
+    { name: 'TRAIL', description: 'Đường mòn' },
+    { name: 'TURF', description: 'Sân cỏ' },
+]

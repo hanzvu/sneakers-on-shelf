@@ -1,18 +1,29 @@
 import { Box, Container, Grid, Paper, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Page from '../../components/Page';
 import CartItem from '../components/cart/CartItem';
 import CartOrderForm from '../components/cart/CartOrderForm';
 import { fCurrency } from '../../utils/formatNumber';
 import { fetchProvincesToStore } from '../services/DeliveryService';
+import { getMemberOfferPolicyByAccountId } from '../services/CartService';
 
 export default function CartLayout() {
 
     const cart = useSelector(state => state.cart.cart);
 
+    const account = useSelector(state => state.account.account);
+
+    const [memberOfferPolicy, setMemberOfferPolicy] = useState();
+
     useEffect(() => {
         fetchProvincesToStore();
+        if (account.id == null) {
+            return;
+        }
+        getMemberOfferPolicyByAccountId(account.id).then(data => {
+            setMemberOfferPolicy(data);
+        });
     }, [])
 
     const total = (items) => (items == null ? 0 : items.reduce((total, item) => (total + item.price * item.quantity), 0))
@@ -82,7 +93,7 @@ export default function CartLayout() {
                     {cart.items != null && cart.items.length !== 0 &&
                         <Paper elevation={3} square>
                             <Box p={2}>
-                                <CartOrderForm id={cart.id} total={total(cart.items)} token={cart.token} />
+                                <CartOrderForm id={cart.id} total={total(cart.items)} token={cart.token} memberOfferPolicy={memberOfferPolicy} />
                             </Box>
                         </Paper>
                     }

@@ -22,7 +22,7 @@ const ListItemIconStyle = styled(ListItemIcon)({
     justifyContent: 'center',
 });
 
-export default function CartOrderForm({ id, total, token }) {
+export default function CartOrderForm({ id, total, token, memberOfferPolicy }) {
 
     const account = useSelector(state => state.account.account);
 
@@ -77,7 +77,6 @@ export default function CartOrderForm({ id, total, token }) {
 
     const handleSubmitCart = (event) => {
         event.preventDefault();
-
         const selectedVoucher = voucher.data ? { id: voucher.data.id } : null;
 
         if (selectedCustomerInfo) {
@@ -85,8 +84,14 @@ export default function CartOrderForm({ id, total, token }) {
                 customerInfo: selectedCustomerInfo,
                 voucher: selectedVoucher
             }).then(data => {
-                navigate(`/purchase/${data}`)
+                navigate(`/purchase/${data.id}`)
                 clearCart();
+            }).catch(error => {
+                if (error.response && error.response.status === 400) {
+                    showSnackbar(error.response.data, 'error')
+                } else {
+                    showSnackbar('Có lỗi xảy ra, hãy thử lại sau.', 'error')
+                }
             });
         } else {
             if (addressFormInput.province == null || addressFormInput.district == null || addressFormInput.ward == null || addressFormInput.address.trim().length === 0) {
@@ -94,7 +99,7 @@ export default function CartOrderForm({ id, total, token }) {
                 return;
             }
 
-            if (account == null && addressFormInput.email.trim().length === 0) {
+            if (account.id == null && addressFormInput.email.trim().length === 0) {
                 showSnackbar("Bạn chưa nhập email.", "warning")
                 return;
             }
@@ -121,11 +126,22 @@ export default function CartOrderForm({ id, total, token }) {
                 email: addressFormInput.email,
                 voucher: selectedVoucher
             }).then(data => {
-                const navigateModel = { pathname: `/purchase/${data}` }
+                const navigateModel = { pathname: `/purchase/${data.id}` }
                 navigate(token ? { ...navigateModel, search: `?token=${token}` } : navigateModel);
                 clearCart();
+            }).catch(error => {
+                if (error.response && error.response.status === 400) {
+                    showSnackbar(error.response.data, 'error')
+                } else {
+                    showSnackbar('Có lỗi xảy ra, hãy thử lại sau.', 'error')
+                }
             });
         }
+    }
+
+    const calculateTotal = (total, fee, discount, offer) => {
+        const rs = total + fee - discount - total * offer / 100;
+        return rs > 0 ? rs : 0;
     }
 
     return (<>
@@ -220,7 +236,7 @@ export default function CartOrderForm({ id, total, token }) {
                             <Grid item container >
                                 <Grid item container xs={6}>
                                     <Typography variant="body1">
-                                        Phí vận chuyển
+                                        Phí Vận Chuyển
                                     </Typography>
                                 </Grid>
                                 <Grid item xs={6} container justifyContent={"flex-end"}>
@@ -243,6 +259,22 @@ export default function CartOrderForm({ id, total, token }) {
                                 </Grid>
                             </Grid>
 
+                            {
+                                memberOfferPolicy != null && memberOfferPolicy.offer > 0 &&
+                                <Grid item container >
+                                    <Grid item container xs={8}>
+                                        <Typography variant="body1">
+                                            Quyền Lợi Thành Viên {memberOfferPolicy.memberRank.description} ({memberOfferPolicy.offer}%)
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={4} container justifyContent={"flex-end"}>
+                                        <Typography variant="body1">
+                                            {fCurrency((total * memberOfferPolicy.offer / 100))}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            }
+
                             <Grid item container >
                                 <Grid item container xs={6}>
                                     <Typography sx={{ fontWeight: 'bold' }} >
@@ -251,7 +283,9 @@ export default function CartOrderForm({ id, total, token }) {
                                 </Grid>
                                 <Grid item xs={6} container justifyContent={"flex-end"}>
                                     <Typography sx={{ fontWeight: 'bold' }} color="error">
-                                        {fCurrency(total + delivery.fee - voucher.discount)}
+                                        {
+                                            fCurrency(calculateTotal(total, delivery.fee, voucher.discount, memberOfferPolicy ? memberOfferPolicy.offer : 0))
+                                        }
                                     </Typography>
                                 </Grid>
                             </Grid>

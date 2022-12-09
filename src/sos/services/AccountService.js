@@ -8,7 +8,8 @@ export const fetchAccount = async () => {
     const auth = getAuthenticatedUser()
     if (auth != null) {
         const response = await axios.get(`${BASE_API}/api/v1/accounts/${auth.id}`);
-        store.dispatch(setAccount(response.data));
+        const memberOfferPolicyResponse = await axios.get(`${BASE_API}/api/v1/accounts/${auth.id}/member-offer-policy`);
+        store.dispatch(setAccount({ ...response.data, memberOfferPolicy : memberOfferPolicyResponse.data }));
     }
 }
 
