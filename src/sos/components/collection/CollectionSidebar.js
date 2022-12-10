@@ -9,8 +9,9 @@ import SquareIcon from '@mui/icons-material/Square';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Stack, styled } from '@mui/material';
+import { Box, Button, Checkbox, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Slider, Stack, styled } from '@mui/material';
 import { getAllBrand, getAllCategory, getAllColor, getAllMaterial, getAllProductGender, getAllSole } from "../../services/CollectionService";
+import { fCurrency } from '../../../utils/formatNumber';
 
 export default function CollectionSidebar() {
 
@@ -19,7 +20,11 @@ export default function CollectionSidebar() {
         categories: [],
         productGenders: []
     });
+
     const [searchParams, setSearchParams] = useSearchParams();
+
+    const [value1, setValue1] = useState([searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 100000, searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 10000000])
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -64,6 +69,18 @@ export default function CollectionSidebar() {
             });
         }
     }
+
+    const handleChange1 = (event, newValue, activeThumb) => {
+        if (!Array.isArray(newValue)) {
+            return;
+        }
+
+        if (activeThumb === 0) {
+            setValue1([Math.min(newValue[0], value1[1] - 100000), value1[1]]);
+        } else {
+            setValue1([value1[0], Math.max(newValue[1], value1[0] + 100000)]);
+        }
+    };
 
     return (
         <div>
@@ -119,6 +136,28 @@ export default function CollectionSidebar() {
                             ))
                         }
                     </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>MỨC GIÁ</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Stack direction="row" justifyContent="center">
+                        <Typography variant='body2'>
+                            {`${fCurrency(value1[0])} - ${fCurrency(value1[1])}`}
+                        </Typography>
+                    </Stack>
+                    <Slider
+                        size='small'
+                        min={100000} max={10000000}
+                        value={[searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : 100000, searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : 10000000]}
+                        onChange={handleChange1}
+                        onChangeCommitted={() => { setSearchParams({ ...Object.fromEntries(searchParams.entries()), minPrice: value1[0], maxPrice: value1[1] }) }}
+                        step={100000}
+                        disableSwap
+                        sx={{ color: '#555555' }}
+                    />
                 </AccordionDetails>
             </Accordion>
             <Accordion sx={{ background: "none" }} disableGutters>
@@ -251,7 +290,7 @@ export default function CollectionSidebar() {
             </Accordion>
             {
                 !searchParams.entries().next().done &&
-                <Stack direction="row" justifyContent="center">
+                <Stack direction="row" justifyContent="center" pt={1}>
                     <Button variant='contained' color='inherit' onClick={() => {
                         setSearchParams({})
                     }}>
