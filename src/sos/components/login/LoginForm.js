@@ -81,16 +81,12 @@ export default function LoginForm() {
                 />
             </Stack>
 
-            <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-                <RHFCheckbox name="remember" label="Ghi nhớ đăng nhập" />
-                <Link variant="subtitle2" underline="hover" component={RouterLink} to="/forgot-password">
-                    Quên mật khẩu ?
-                </Link>
+            <Stack direction="row" alignItems="center" justifyContent="center" sx={{ my: 2 }}>
+                <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
+                    Đăng Nhập
+                </LoadingButton>
             </Stack>
 
-            <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-                Đăng Nhập
-            </LoadingButton>
         </FormProvider>
     );
 }

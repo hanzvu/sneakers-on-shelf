@@ -162,6 +162,25 @@ export default function CollectionSidebar() {
             </Accordion>
             <Accordion sx={{ background: "none" }} disableGutters>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
+                    <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>KÍCH CỠ</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <FormControl>
+                        <Grid container>
+                            {
+                                AVAILABLE_SIZE.map(entity => (
+                                    <Grid item xs={3} key={entity}>
+                                        <FormControlLabel label={<Typography variant='body2' color='dimgray'>{entity}</Typography>} control={<Checkbox sx={{ px: 0.5, py: 0.8 }} size='small' checked={checkParamInclude('size', entity)} onChange={() => { handleCheckParam('size', entity) }} icon={<RadioButtonUncheckedIcon style={{ fill: '#AAAAAA' }} />}
+                                            checkedIcon={<CheckCircleOutlineIcon style={{ fill: '#222222' }} />} />} />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </FormControl>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion sx={{ background: "none" }} disableGutters>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content">
                     <Typography sx={{ fontWeight: 'bold' }} variant='h6' color={"grey"}>MÀU SẮC</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -379,3 +398,5 @@ const SURFACE = [
     { name: 'TRAIL', description: 'Đường mòn' },
     { name: 'TURF', description: 'Sân cỏ' },
 ]
+
+const AVAILABLE_SIZE = ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46']

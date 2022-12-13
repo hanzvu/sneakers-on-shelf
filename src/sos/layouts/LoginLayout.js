@@ -1,4 +1,4 @@
-import { Box, Container, Link, styled, Typography } from "@mui/material";
+import { Box, Container, Link, Stack, styled, Typography } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import Page from "../../components/Page";
 import AuthSocial from "../components/login/AuthSocial";
@@ -42,6 +42,11 @@ export default function LoginLayout() {
                                     Đăng ký ngay
                                 </Link>
                             </Typography>
+                            <Stack p={3} direction={"row"} justifyContent={"center"}>
+                                <Link variant="subtitle2" underline="hover" component={RouterLink} to="/forgot-password">
+                                    Quên mật khẩu ?
+                                </Link>
+                            </Stack>
                         </ContentStyle>
                     </Box>
                 </Container>

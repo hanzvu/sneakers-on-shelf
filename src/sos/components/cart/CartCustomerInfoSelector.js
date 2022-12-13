@@ -20,7 +20,7 @@ export default function CartCustomerInfoSelector({ account, handleSelectCustomer
     return (
         <>
             <Button hidden={account.id == null} variant="outlined" onClick={loadData}>
-                Chọn Tài Khoản
+                Chọn Địa Chỉ
             </Button>
             <Dialog
                 maxWidth={"md"}
