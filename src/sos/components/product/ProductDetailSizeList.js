@@ -104,7 +104,12 @@ export default function ProductDetailSizeList({ productDetails }) {
                     name="quantity"
                     quantity={quantity}
                     available={selectedProduct.quantity}
-                    onChangeQuantity={event => handleChangeQuantity(event.target.value)}
+                    onChangeQuantity={event => {
+                        if (event.target.value >= 1 && Number.isInteger(Number(event.target.value))) {
+                            handleChangeQuantity(event.target.value)
+                        }
+                    }
+                    }
                     onIncrementQuantity={() => handleChangeQuantity(quantity + 1)}
                     onDecrementQuantity={() => handleChangeQuantity(quantity - 1)} />
             </Grid>
@@ -129,19 +134,19 @@ export default function ProductDetailSizeList({ productDetails }) {
                 <Typography variant="body1" component="div" align="center">
                     Gọi đặt mua <a className="text-decoration-none text-dark" href="tel:0843442263"><b>0844.488.888</b></a> (08:00 - 22:00)
                 </Typography>
-            </Grid>           
+            </Grid>
         </Grid>
         <Grid item xs={12}>
-                <Accordion sx={{ background: "none" }}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
-                        <Typography variant="h5">Chính sách giao hàng</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography><Iconify icon="eva:chevron-down-outline" />  Khi hoàn thành mua sắm tại Website, đơn hàng sẽ lập tức được đóng gói và chuẩn bị tiến hành giao hàng.</Typography>
-                        <Typography><Iconify icon="eva:chevron-down-outline" />  Hàng đã đặt thành công sẽ được chuyển giao cho bên thứ ba và xác nhận sẽ được giao chậm nhất là 5 ngày cho một đơn hàng.</Typography>
-                    </AccordionDetails>
-                </Accordion>
-            </Grid>
+            <Accordion sx={{ background: "none" }}>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                    <Typography variant="h5">Chính sách giao hàng</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography><Iconify icon="eva:chevron-down-outline" />  Khi hoàn thành mua sắm tại Website, đơn hàng sẽ lập tức được đóng gói và chuẩn bị tiến hành giao hàng.</Typography>
+                    <Typography><Iconify icon="eva:chevron-down-outline" />  Hàng đã đặt thành công sẽ được chuyển giao cho bên thứ ba và xác nhận sẽ được giao chậm nhất là 5 ngày cho một đơn hàng.</Typography>
+                </AccordionDetails>
+            </Accordion>
+        </Grid>
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle id="alert-dialog-title" align="center"><Typography variant="h5">Hướng Dẫn Chọn Size</Typography></DialogTitle>
             <DialogContent>

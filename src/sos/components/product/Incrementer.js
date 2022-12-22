@@ -26,7 +26,7 @@ export default function Incrementer({ available, quantity, onIncrementQuantity, 
                     <Iconify icon={'eva:minus-fill'} width={14} height={14} />
                 </IconButton>
 
-                <TextField variant="standard" value={quantity} onChange={onChangeQuantity} inputProps={{ inputMode: 'numeric', pattern: '[0-9]*', min: 1, style: { textAlign: 'center' } }} sx={{ width: 40, textAlign: 'center' }} />
+                <TextField variant="standard" type="number" value={quantity} onChange={onChangeQuantity} inputProps={{ inputMode: 'numeric', pattern: '[0-9]', min: 1, style: { textAlign: 'center' } }} sx={{ width: 40, textAlign: 'center' }} />
 
                 <IconButton size="small" color="inherit" disabled={quantity >= available} onClick={onIncrementQuantity}>
                     <Iconify icon={'eva:plus-fill'} width={14} height={14} />
