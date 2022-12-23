@@ -31,22 +31,21 @@ export default function NavbarMenu() {
                                 HÀNG BÁN CHẠY
                             </Link>
                         </li>
-                        <li className="nav-item dropdown"><a className="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"> TÙY CHỌN </a>
-                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li className='dropdown-item'>
-                                    <Link className='nav-link text-dark' to={'/products'} component={RouterLink}>
-                                        Dành cho người bán
-                                    </Link>
-                                </li>
-                                <li className='dropdown-item'>
-                                    <Link className='nav-link text-dark' to={'/purchase'} component={RouterLink}>
-                                        Purchase
-                                    </Link>
-                                </li>
-                                <li><hr className="dropdown-divider" /></li>
-                                <li><a className="dropdown-item" href="#">Something else
-                                    here</a></li>
-                            </ul></li>
+                        <li className="nav-item d-block d-sm-none">
+                            <Link className='nav-link text-light' to={'/cart'} component={RouterLink}>
+                                GIỎ HÀNG
+                            </Link>
+                        </li>
+                        <li className="nav-item d-block d-sm-none">
+                            <Link className='nav-link text-light' to={'/login'} component={RouterLink}>
+                                ĐĂNG NHẬP
+                            </Link>
+                        </li>
+                        <li className="nav-item d-block d-sm-none">
+                            <Link className='nav-link text-light' to={'/account'} component={RouterLink}>
+                                TÀI KHOẢN
+                            </Link>
+                        </li>
                     </ul>
                 </div>
             </div>

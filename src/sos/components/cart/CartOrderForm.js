@@ -193,14 +193,24 @@ export default function CartOrderForm({ id, total, token, memberOfferPolicy }) {
                         <Grid item xs={12} pt={3} alignItems={"center"}>
                             {
                                 delivery.leadtime &&
-                                <Box className="d-flex align-items-center pb-3">
-                                    <ListItemIconStyle><Iconify icon={"carbon:delivery"} width={30} height={30} /></ListItemIconStyle>
-                                    <Typography
-                                        component="span"
-                                        variant="h6" textAlign={"end"}>
-                                        Thời gian nhận hàng dự kiến : {formatDate(new Date(delivery.leadtime * 1000))}
-                                    </Typography>
-                                </Box>
+                                <>
+                                    <Box className="d-flex align-items-center pb-3">
+                                        <ListItemIconStyle><Iconify icon={"carbon:delivery"} width={30} height={30} /></ListItemIconStyle>
+                                        <Typography
+                                            component="span"
+                                            variant="h6" textAlign={"end"}>
+                                            Thời gian nhận hàng dự kiến : {formatDate(new Date(delivery.leadtime * 1000))}
+                                        </Typography>
+                                    </Box>
+                                    <Box className="d-flex align-items-center pb-3">
+                                        <ListItemIconStyle><Iconify icon={"carbon:delivery"} width={30} height={30} /></ListItemIconStyle>
+                                        <Typography
+                                            component="span"
+                                            variant="h6" textAlign={"end"}>
+                                            Đơn vị vận chuyển : <a href="https://ghn.vn/" className="text-decoration-none text-primary">Giao Hàng Nhanh</a>
+                                        </Typography>
+                                    </Box>
+                                </>
                             }
                         </Grid>
                     </Grid>

@@ -110,13 +110,9 @@ export default function AccountPurchase() {
                             <Pagination
                                 page={purchases.number + 1}
                                 count={purchases.totalPages}
-                                renderItem={(item) => (
-                                    <PaginationItem
-                                        component={Link}
-                                        to={`/account/purchase${item.page === purchases.number + 1 ? '' : `?page=${item.page}`}`}
-                                        {...item}
-                                    />
-                                )}
+                                onChange={(event, value) => {
+                                    setSearchParams({ ...Object.fromEntries(searchParams.entries()), page: value });
+                                }}
                             />
                         </Stack>
                     }

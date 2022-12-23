@@ -10,7 +10,7 @@ export default function BestSellingProduct() {
     });
 
     useEffect(() => {
-        findProducts({ sort: 'best_selling', psize: 24 }).then(response => {
+        findProducts({ sort: 'best_selling', psize: 12 }).then(response => {
             setData(response.data)
         })
     }, [])
